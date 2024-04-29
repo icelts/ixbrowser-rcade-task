@@ -11,7 +11,7 @@ c.show_request_log = True
 # Object properties are set one by one
 p = Profile()
 p.random_color()
-p.site_url = 'https://www.ixbrowser.com'
+p.site_url = 'https://www.x.com'
 p.name = 'Temp ' + time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(time.time()))
 p.tag = ['test', 'test1']
 

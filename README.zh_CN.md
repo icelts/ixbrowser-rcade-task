@@ -3,8 +3,9 @@
 ixBrowser本地API V2.0 Python版本
 
 ## README.md
-- en [English](README.md)
-- zh_CN [简体中文](README.zh_CN.md)
+rcade要求参与空投的用户完成https://hatchlings.revolvinggames.com/?cache=false 的养殖任务可以才拿到空投
+这个任务要求用户使用参与任务的钱包授权登录进去，然后拿到至少500点养殖点数，最后再在任务界面认证就可以了，这个任务我需要用
+ix自动化来完成，全程靠坐标点击，不做图像识别
 
 ## 安装方法
 
