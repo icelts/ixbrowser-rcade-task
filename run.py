@@ -7,8 +7,7 @@ from examples import getproxy_wwp
 from selenium.webdriver import Chrome
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service
-from selenium.webdriver.support.ui import Select
-
+from selenium.webdriver.common.action_chains import ActionChains
 
 c = IXBrowserClient()
 c.show_request_log = True
@@ -63,18 +62,103 @@ driver = Chrome(service=Service(web_driver_path), options=chrome_options)
 print(time.strftime("%H:%M:%S", time.localtime(time.time())), 'Visit the ixBrowser homepage by default')
 driver.get("https://hatchlings.revolvinggames.com/?cache=false")
 print(time.strftime("%H:%M:%S", time.localtime(time.time())), 'Automatically exit after 30 seconds')
-time.sleep(30)
+time.sleep(10)
 window_handles = driver.window_handles
 driver.switch_to.window(window_handles[1])  # 切换到第二个标签页
-print("第二个标签页:", driver.title)
+print("第二个标签页,start to setup wallet:", driver.title)
 time.sleep(3)
-driver.find_element("xpath", "//*[@id='root']/main/div[2]/div/div[2]/button[2]").click()
+driver.get("chrome-extension://kcdcnclolfgbhekonhibfjaecmmadgjf/home.html#onboarding/welcome")
 time.sleep(3)
-driver.find_element("xpath", "//*[@id='root']/main/div[2]/div/div[2]/button[3]/div[2]/div/div/div[1]/div").click()
-time.sleep(3)
-select_element = driver.find_element("ID", "button--listbox-input--17")
-select = Select(select_element)
-select.select_by_value("1")
+driver.find_element("xpath", "//*[@id='onboarding__terms-checkbox']").click()
 time.sleep(2)
-driver.find_element("xpath", "//*[@id='root']/main/div[2]/form/div/section/div[2]/input").send_keys("123456789")
 time.sleep(2)
+driver.find_element("xpath", "//*[@id='app-content']/div/div[2]/div/div/div/ul/li[2]/button").click() #click the creat button
+
+time.sleep(2)                           #
+driver.find_element("xpath", "//*[@id='app-content']/div/div[2]/div/div/div/div[2]/button[1]").click() #click the nothanks button
+time.sleep(2)
+driver.find_element("xpath", "//*[@id='app-content']/div/div[2]/div/div/div/div[2]/form/div[1]/label/input").send_keys('Aa2006123!!')
+time.sleep(2)
+driver.find_element("xpath", "//*[@id='app-content']/div/div[2]/div/div/div/div[2]/form/div[2]/label/input").send_keys('Aa2006123!!')
+time.sleep(2)
+driver.find_element("xpath", "//*[@id='root']/main/div[2]/form/div[2]/span/input").click()
+time.sleep(3)
+driver.find_element("xpath", "//*[@id='app-content']/div/div[2]/div/div/div/div[2]/form/div[3]/label/span[1]/input").click()
+time.sleep(3)
+driver.find_element("xpath", "//*[@id='app-content']/div/div[2]/div/div/div/div[2]/form/button").click()   #click creat wallet button
+time.sleep(3)
+driver.find_element("xpath", "//*[@id='app-content']/div/div[2]/div/div/div/div[2]/button[1]").click() #click notrecommend button
+time.sleep(3)
+driver.find_element("xpath", "//*[@id='popover-content']/div/div/section/div[1]/div/div/label/input").click()
+time.sleep(3)
+driver.find_element("xpath", "//*[@id='popover-content']/div/div/section/div[2]/div/button[2]").click()#click skip button
+time.sleep(3)
+driver.find_element("xpath", "//*[@id='app-content']/div/div[2]/div/div/div/div[3]/button").click()#click done button
+time.sleep(3)
+driver.find_element("xpath", "//*[@id='app-content']/div/div[2]/div/div/div/div[2]/button").click()#click next button
+time.sleep(3)
+driver.find_element("xpath", "//*[@id='app-content']/div/div[2]/div/div/div/div[2]/button").click()  # click done button
+#next step is import our wallet private key
+time.sleep(3)
+driver.find_element("xpath", "//*[@id='app-content']/div/div[2]/div/div[2]/button/span[1]/span").click() #click account1
+time.sleep(3)
+driver.find_element("xpath", "/html/body/div[3]/div[3]/div/section/div[2]/button").click()
+time.sleep(3)
+driver.find_element("xpath", "/html/body/div[3]/div[3]/div/section/div/div[2]/button").click()
+time.sleep(3)
+driver.find_element("xpath", "//*[@id='private-key-box']").send_keys('0xa86cbe31a1819533fc4d4a927078cada175c8c453230af2b012c52016b89d155')
+time.sleep(3)
+driver.find_element("xpath", "/html/body/div[3]/div[3]/div/section/div/div/div[2]/button[2]").click() #click import button
+time.sleep(3)
+driver.switch_to.window(window_handles[0])  # 切换到第1个标签页
+#the next step is game automatic,i will test if it work without image recognition.just click
+time.sleep(3)
+driver.find_element("xpath", "//*[@id='root']/div[1]/div[2]/div/button/span").click() #click the play button
+time.sleep(3)
+driver.find_element("xpath", "//*[@id='link-wallet-tooltip']/span").click()
+time.sleep(3)
+driver.find_element("xpath", "/html/body/w3m-modal//wui-flex/wui-card/w3m-router//div/w3m-connect-view//wui-flex/wui-flex/w3m-connector-list//wui-flex/w3m-connect-injected-widget//wui-flex/wui-list-wallet//button/wui-text").click()
+time.sleep(3)
+driver.switch_to.window(window_handles[1])
+time.sleep(3)
+driver.refresh()
+time.sleep(3)
+driver.find_element("xpath", "//*[@id='app-content']/div/div/div/div[2]/div/div[3]/div/div[2]/button[2]").click()  #click the connect button
+time.sleep(6)
+driver.switch_to.window(window_handles[0])
+time.sleep(3)
+driver.find_element("xpath", "/html/body/w3m-modal//wui-flex/wui-card/w3m-router//div/w3m-unsupported-chain-view//wui-flex/wui-flex[2]/wui-list-network//button/wui-flex/wui-text").click()
+time.sleep(3)
+driver.switch_to.window(window_handles[1])
+time.sleep(3)
+driver.refresh()
+time.sleep(3)
+driver.find_element("xpath", "//*[@id='app-content']/div/div/div/div[2]/div/button[2]").click()  #click the connect button
+time.sleep(6)
+driver.switch_to.window(window_handles[0])
+time.sleep(3)
+driver.find_element("xpath", "//*[@id='link-wallet-tooltip']/span").click()
+time.sleep(3)
+driver.switch_to.window(window_handles[1])
+time.sleep(3)
+driver.refresh()
+time.sleep(3)
+driver.find_element("xpath", "//*[@id='app-content']/div/div/div/div/div[3]/button[2]").click()
+time.sleep(6)
+driver.switch_to.window(window_handles[0])
+time.sleep(3)
+driver.find_element("xpath", "/html/body/div[5]/div/div/div/div[1]/button").click() #click the close button
+time.sleep(3)
+driver.find_element("xpath", "/html/body/div[4]/div/div/div/div[2]/div/div[2]/div[1]/input").click() #click the input box
+time.sleep(3)
+driver.find_element("xpath", "/html/body/div[4]/div/div/div/div[2]/div/div[2]/div[2]").click() #click the input box
+time.sleep(3)
+driver.find_element("xpath", "/html/body/div[4]/div/div/div/div[3]/button").click() #click the accept button
+time.sleep(3)
+driver.find_element("xpath", "/html/body/div[7]/div/div/div/div[2]/div/div/input").send_keys('61eth')
+time.sleep(2)
+driver.find_element("xpath", "/html/body/div[7]/div/div/div/div[2]/div/div/button").click()
+time.sleep(6)
+# 定位目标元素
+driver.find_element("xpath", "//*[@id='root']/div[1]/div[2]/div/div[2]/button").click()
+
