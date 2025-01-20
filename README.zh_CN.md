@@ -49,12 +49,5 @@ else:
 		print(open_result)
 ```
 
-更多高级参考
-
 /examples 目录中有更多使用范例
 
-
-
-## API文档
-
-https://www.ixbrowser.com/doc/v2/local-api/cn
