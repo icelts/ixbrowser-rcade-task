@@ -3,13 +3,13 @@ import time
 sys.path.insert(0, sys.path[0]+"/../")
 from ixbrowser_local_api import IXBrowserClient
 from ixbrowser_local_api import Profile, Proxy, Preference, Fingerprint, Consts
-
+from getproxy_wwp import get_proxy_ip
 
 c = IXBrowserClient()
 c.show_request_log = True
 
-profile_id = 0
-name = 'test' + str(int(time.time()))
+profile_id = 49
+name = 'rcade' + str(int(time.time()))
 site_id = Consts.DEFAULT_SITE_ID_BLANK_PAGE
 
 result = c.create_profile_by_copying(profile_id, name, site_id=site_id)

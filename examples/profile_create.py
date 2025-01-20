@@ -5,17 +5,18 @@ from ixbrowser_local_api import IXBrowserClient
 from ixbrowser_local_api import Profile, Proxy, Preference, Fingerprint, Consts
 
 
+
 c = IXBrowserClient()
 c.show_request_log = True
 
 # Object properties are set one by one
 p = Profile()
 p.random_color()
-p.site_url = 'https://www.x.com'
+p.site_url = 'https://hatchlings.revolvinggames.com/?cache=false'
 p.name = 'Temp ' + time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(time.time()))
 p.tag = ['test', 'test1']
 
-proxy = Proxy()
+proxy = get_proxy_ip()
 
 # custom proxy
 proxy.change_to_custom_mode(Consts.PROXY_TYPE_SOCKS5, '127.0.0.1', '10808')
@@ -44,7 +45,7 @@ preference = Preference()
 preference.set_cloud_backup(1, 1, 0)
 preference.block_audio = 1
 preference.block_image = 1
-preference.open_url = 'https://www.google.com'
+preference.open_url = 'https://hatchlings.revolvinggames.com/?cache=false'
 preference.load_profile_info_page = 0
 p.preference_config = preference
 
@@ -61,7 +62,7 @@ p.fingerprint_config = fingerprint
 # Assign values to object properties in batches through dictionaries
 p_dict = dict()
 p_dict['color'] = '#ff0000'
-p_dict['site_url'] = 'https://www.ixbrowser.com'
+p_dict['site_url'] = 'https://hatchlings.revolvinggames.com/?cache=false'
 p_dict['name'] = 'Temp ' + time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(time.time()))
 
 p_dict['proxy_config'] = dict()
