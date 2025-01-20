@@ -7,6 +7,9 @@ rcade要求参与空投的用户完成https://hatchlings.revolvinggames.com/?cac
 这个任务要求用户使用参与任务的钱包授权登录进去，然后拿到至少500点养殖点数，最后再在任务界面认证就可以了，这个任务我需要用
 ix自动化来完成，全程靠坐标点击，不做图像识别
 
+So im working on develop a ixBrowser automation for https://hatchlings.revolvinggames.com/?cache=false
+the test file is run.py
+
 ## 安装方法
 
 1. pypi安装
