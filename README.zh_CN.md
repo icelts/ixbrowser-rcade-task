@@ -10,21 +10,18 @@ ix自动化来完成，全程靠坐标点击，不做图像识别
 So im working on develop a ixBrowser automation for https://hatchlings.revolvinggames.com/?cache=false
 the test file is run.py
 
-## 安装方法
+Note: 20250121
+测试了phantom和metamask以及okx三个钱包，基本上要做自动化的时候使用okx是最好的选择，步骤少，支持的网络比较多
+浏览器打开的时候会插件会弹出窗口，这个可以通过设置chrome的参数来屏蔽(我没有测试)，
+也可以通过代码来关闭：
+window_handles = driver.window_handles
+# 切换到新窗口
+driver.switch_to.window(window_handles[-1])
+# 关闭新窗口
+driver.close()
+同时要操作OKX插件可以在新的标签页里面加载插件的初始化界面：chrome-extension://gniabnkpabeeokgnkcfnlbgdnngddeeb/notification.html#/initialize
+这个界面的地址可以在弹窗上面获得，但是要注意每一次调用插件的时候都需要切换到插件所在的标签页刷新页面重新加载才可以‘’
 
-1. pypi安装
-```BASH
-pip install ixbrowser-local-api
-```
-
-2. 源代码安装
-```BASH
-git clone https://github.com/ixspyinc/ixbrowser-local-api-python.git
-cd ixbrowser-local-api-python
-python setup.py install
-```
-
-## 使用方法
 
 简单参考
 ```python
