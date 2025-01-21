@@ -62,7 +62,7 @@ driver = Chrome(service=Service(web_driver_path), options=chrome_options)
 print(time.strftime("%H:%M:%S", time.localtime(time.time())), 'Visit the ixBrowser homepage by default')
 driver.get("https://hatchlings.revolvinggames.com/?cache=false")
 print(time.strftime("%H:%M:%S", time.localtime(time.time())), 'Automatically exit after 30 seconds')
-time.sleep(10)
+time.sleep(30)
 window_handles = driver.window_handles
 # 切换到新窗口
 driver.switch_to.window(window_handles[-1])
@@ -97,7 +97,7 @@ time.sleep(6)
 driver.find_element("xpath", "//*[@id='app']/div/div[1]/div/div[2]/form/div[3]/div[2]/div/div/div/div/input").send_keys('Aa2006123!!')
 time.sleep(6)
 driver.find_element("xpath", "//*[@id='app']/div/div[2]/div/button").click()#click confirm button
-time.sleep(6)
+time.sleep(10)
 driver.find_element("xpath", "//*[@id='app']/div/div/div/div[4]/div/button").click()#click start button
 time.sleep(3)
 driver.switch_to.window(window_handles[0])  # 切换到第1个标签页
@@ -109,7 +109,9 @@ driver.find_element("xpath", "//*[@id='root']/div[1]/div[2]/div/button/span").cl
 time.sleep(3)
 driver.find_element("xpath", "//*[@id='link-wallet-tooltip']/span").click()
 time.sleep(3)
-driver.find_element("xpath", "/html/body/w3m-modal//wui-flex/wui-card/w3m-router//div/w3m-connect-view//wui-flex/wui-flex/w3m-connector-list//wui-flex/w3m-connect-injected-widget//wui-flex/wui-list-wallet//button").click()
+driver.find_element("By.css_selector", "wui-wallet-image[name='OKX Wallet']").click()
+#driver.find_element("By.css_selector", "document.querySelectorAll('html > body > w3m-modal')[0].shadowRoot.querySelectorAll('wui-flex > wui-card > w3m-router')[0].shadowRoot.querySelectorAll('div > w3m-connect-view')[0].shadowRoot.querySelectorAll('wui-flex > wui-flex > w3m-connector-list')[0].shadowRoot.querySelectorAll('wui-flex > w3m-connect-injected-widget')[0].shadowRoot.querySelectorAll('wui-flex > wui-list-wallet')[0].shadowRoot.querySelectorAll('button')[0]").click()
+#driver.find_element("xpath", "/html/body/w3m-modal//wui-flex/wui-card/w3m-router//div/w3m-connect-view//wui-flex/wui-flex/w3m-connector-list//wui-flex/w3m-connect-injected-widget//wui-flex/wui-list-wallet//button").click()
 time.sleep(3)
 driver.switch_to.window(window_handles[1])
 time.sleep(3)
