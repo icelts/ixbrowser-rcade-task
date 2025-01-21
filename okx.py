@@ -72,7 +72,23 @@ driver.switch_to.window(window_handles[-1])
 #driver.switch_to.window(window_handles[1])  # 切换到第二个标签页
 print("第二个标签页,start to setup wallet:", driver.title)
 time.sleep(3)
-driver.get("chrome-extension://gniabnkpabeeokgnkcfnlbgdnngddeeb/notification.html#/initialize")
+window_handles = driver.window_handles
+
+# 遍历每个窗口句柄
+for handle in window_handles:
+    driver.switch_to.window(handle)
+    title = driver.title
+    print(f"Window Handle: {handle}, Title: {title}")
+
+    # 如果标题是 "OKX Wallet"，则在该窗口中打开指定页面
+    if title == "OKX Wallet":
+        print("Found OKX Wallet window. Opening the extension page...")
+        driver.get("chrome-extension://gniabnkpabeeokgnkcfnlbgdnngddeeb/notification.html#/initialize")
+        break  # 退出循环
+
+# 如果没有找到标题为 "OKX Wallet" 的窗口
+else:
+    print("No window with title 'OKX Wallet' found.")
 time.sleep(3)
 driver.find_element("xpath", "//*[@id='app']/div/div/div/div[3]/div/div[2]/button/span").click() #click the import button
 time.sleep(2)
@@ -81,7 +97,7 @@ driver.find_element("xpath", "//*[@id='app']/div/div/div/div[3]/div/div[1]/div[2
 time.sleep(2)                           #
 driver.find_element("xpath", "//*[@id='app']/div/div[1]/div/div[2]/div/div[1]/div/div[2]/div/div[2]").click() #click the privte key button
 time.sleep(2)
-driver.find_element("xpath", "//*[@id='app']/div/div[1]/div/div[2]/div/div[2]/div/div/form/div[2]/div/textarea").send_keys('0xa86cbe31a1819533fc4d4a927078cada175c8c453230af2b012c52016b89d155')
+driver.find_element("xpath", "//*[@id='app']/div/div[1]/div/div[2]/div/div[2]/div/div/form/div[2]/div/textarea").send_keys('0x2c230435cbf3b53bfb4059a97a654ff5d5daaeab4f61eb5e0394c969538667ab')
 time.sleep(6)
 time.sleep(2)
 driver.find_element("xpath", "//*[@id='app']/div/div[2]/div/button").click() #click the confirm button
@@ -97,7 +113,7 @@ time.sleep(6)
 driver.find_element("xpath", "//*[@id='app']/div/div[1]/div/div[2]/form/div[3]/div[2]/div/div/div/div/input").send_keys('Aa2006123!!')
 time.sleep(6)
 driver.find_element("xpath", "//*[@id='app']/div/div[2]/div/button").click()#click confirm button
-time.sleep(10)
+time.sleep(15)
 driver.find_element("xpath", "//*[@id='app']/div/div/div/div[4]/div/button").click()#click start button
 time.sleep(3)
 driver.switch_to.window(window_handles[0])  # 切换到第1个标签页
@@ -130,31 +146,35 @@ time.sleep(3)
 print(time.strftime("%H:%M:%S", time.localtime(time.time())), 'click the arbitrum one button')
 actions.move_by_offset(606, 187).click().perform()    #click the okx wallet button
 time.sleep(6)
-driver.get("chrome-extension://gniabnkpabeeokgnkcfnlbgdnngddeeb/notification.html#/initialize")
-time.sleep(3)
 driver.find_element("xpath", "//*[@id='link-wallet-tooltip']/span").click()
-time.sleep(3)
-#driver.refresh()
+time.sleep(6)
 window_handles = driver.window_handles
 driver.switch_to.window(window_handles[-1])
 time.sleep(3)
 print(time.strftime("%H:%M:%S", time.localtime(time.time())), 'click the confirm button')
-driver.find_element("xpath", "//*[@id='app-content']/div/div/div/div/div[3]/button[2]").click()
-time.sleep(6)
+driver.find_element("xpath", "//*[@id='app']/div/div/div/div/div/div[4]/div/button[2]/span").click()
+time.sleep(6)                          #//*[@id='app']/div/div/div/div/div/div[4]/div/button[2]/span
 driver.switch_to.window(window_handles[0])
 time.sleep(3)
+print(time.strftime("%H:%M:%S", time.localtime(time.time())), 'click the close button')
 driver.find_element("xpath", "/html/body/div[5]/div/div/div/div[1]/button").click() #click the close button
 time.sleep(3)
+print(time.strftime("%H:%M:%S", time.localtime(time.time())), 'click the first input box')
 driver.find_element("xpath", "/html/body/div[4]/div/div/div/div[2]/div/div[2]/div[1]/input").click() #click the input box
 time.sleep(3)
-driver.find_element("xpath", "/html/body/div[4]/div/div/div/div[2]/div/div[2]/div[2]").click() #click the input box
-time.sleep(3)
-driver.find_element("xpath", "/html/body/div[4]/div/div/div/div[3]/button").click() #click the accept button
-time.sleep(3)
+print(time.strftime("%H:%M:%S", time.localtime(time.time())), 'click the second input box')
+driver.find_element("xpath", "/html/body/div[4]/div/div/div/div[2]/div/div[2]/div[2]/input").click() #click the input box
+time.sleep(10)
+driver.find_element("xpath", "/html/body/div[4]/div/div/div/div[3]/button/span").click() #click the accept button
+time.sleep(10)                           #/html/body/div[4]/div/div/div/div[3]/button/span
 driver.find_element("xpath", "/html/body/div[7]/div/div/div/div[2]/div/div/input").send_keys('61eth')
 time.sleep(2)
 driver.find_element("xpath", "/html/body/div[7]/div/div/div/div[2]/div/div/button").click()
 time.sleep(6)
 # 定位目标元素
 driver.find_element("xpath", "//*[@id='root']/div[1]/div[2]/div/div[2]/button").click()
-
+time.sleep(6)
+print(time.strftime("%H:%M:%S", time.localtime(time.time())), '选蛋')
+for i in range(1, 10):
+    actions.move_by_offset(400, 400).click().perform()
+    time.sleep(3)
