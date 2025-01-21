@@ -97,7 +97,7 @@ driver.find_element("xpath", "//*[@id='app']/div/div/div/div[3]/div/div[1]/div[2
 time.sleep(2)                           #
 driver.find_element("xpath", "//*[@id='app']/div/div[1]/div/div[2]/div/div[1]/div/div[2]/div/div[2]").click() #click the privte key button
 time.sleep(2)
-driver.find_element("xpath", "//*[@id='app']/div/div[1]/div/div[2]/div/div[2]/div/div/form/div[2]/div/textarea").send_keys('0x2c230435cbf3b53bfb4059a97a654ff5d5daaeab4f61eb5e0394c969538667ab')
+driver.find_element("xpath", "//*[@id='app']/div/div[1]/div/div[2]/div/div[2]/div/div/form/div[2]/div/textarea").send_keys('0x0cba4bf639e123a7e8893b5b9addb134f0cac5ffd47f2c3151aae5fe1ffd31cd')
 time.sleep(6)
 time.sleep(2)
 driver.find_element("xpath", "//*[@id='app']/div/div[2]/div/button").click() #click the confirm button
@@ -114,7 +114,8 @@ driver.find_element("xpath", "//*[@id='app']/div/div[1]/div/div[2]/form/div[3]/d
 time.sleep(6)
 driver.find_element("xpath", "//*[@id='app']/div/div[2]/div/button").click()#click confirm button
 time.sleep(15)
-driver.find_element("xpath", "//*[@id='app']/div/div/div/div[4]/div/button").click()#click start button
+#driver.find_element("xpath", "//*[@id='app']/div/div/div/div[4]/div/button").click()#click start button
+driver.close()
 time.sleep(3)
 driver.switch_to.window(window_handles[0])  # 切换到第1个标签页
 #the next step is game automatic,i will test if it work without image recognition.just click
@@ -175,6 +176,51 @@ time.sleep(6)
 driver.find_element("xpath", "//*[@id='root']/div[1]/div[2]/div/div[2]/button").click()
 time.sleep(6)
 print(time.strftime("%H:%M:%S", time.localtime(time.time())), '选蛋')
+window_handles = driver.window_handles
+# 切换到新窗口
+# 前面的导入语句保持不变...
+
+def get_element_center_coordinates(driver, element):
+    """获取元素的中心坐标"""
+    size = element.size
+    location = element.location
+    center_x = location['x'] + (size['width'] / 2)
+    center_y = location['y'] + (size['height'] / 2)
+    return center_x, center_y
+
+# ... (之前的代码保持不变，直到 unity-canvas 交互部分) ...
+
+# 切换到游戏窗口
+window_handles = driver.window_handles
+driver.switch_to.window(window_handles[-1])
+time.sleep(16)  # 等待游戏加载
+
+# 获取 unity canvas 元素
+unity_canvas = driver.find_element("xpath", "//*[@id='unity-canvas']")
+
+# 获取画布尺寸
+canvas_size = unity_canvas.size
+print(f"画布尺寸: {canvas_size}")
+
+# 计算画布内的安全点击坐标
+safe_offset_x = min(400, canvas_size['width'] - 50)  # 距离边缘保持50px
+safe_offset_y = min(400, canvas_size['height'] - 50)  # 距离边缘保持50px
+
+actions = ActionChains(driver)
+
+# 多次点击并进行错误处理
 for i in range(1, 10):
-    actions.move_by_offset(400, 400).click().perform()
-    time.sleep(3)
+    try:
+        # 相对于画布元素移动到安全坐标
+        actions.move_to_element(unity_canvas)\
+               .move_by_offset(safe_offset_x - canvas_size['width']/2,
+                             safe_offset_y - canvas_size['height']/2)\
+               .click()\
+               .perform()
+        print(f"第 {i} 次点击成功，坐标: ({safe_offset_x}, {safe_offset_y})")
+        time.sleep(3)
+    except Exception as e:
+        print(f"第 {i} 次点击失败: {str(e)}")
+        # 发生错误后重置 action chains
+        actions = ActionChains(driver)
+        time.sleep(1)
