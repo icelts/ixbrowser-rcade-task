@@ -67,9 +67,9 @@ window_handles = driver.window_handles
 # 切换到新窗口
 driver.switch_to.window(window_handles[-1])
 # 关闭新窗口
-driver.close()
+#driver.close()
 
-driver.switch_to.window(window_handles[1])  # 切换到第二个标签页
+#driver.switch_to.window(window_handles[1])  # 切换到第二个标签页
 print("第二个标签页,start to setup wallet:", driver.title)
 time.sleep(3)
 driver.get("chrome-extension://gniabnkpabeeokgnkcfnlbgdnngddeeb/notification.html#/initialize")
@@ -108,35 +108,37 @@ time.sleep(3)
 driver.find_element("xpath", "//*[@id='root']/div[1]/div[2]/div/button/span").click() #click the play button
 time.sleep(3)
 driver.find_element("xpath", "//*[@id='link-wallet-tooltip']/span").click()
+time.sleep(5)
+# here is the problem, i can't click the okx wallet button, so i use the action chain to click the okx wallet button
+actions = ActionChains(driver)
+print(time.strftime("%H:%M:%S", time.localtime(time.time())), 'click the okx wallet button')
+actions.move_by_offset(606, 411).click().perform()    #click the okx wallet button
 time.sleep(3)
-driver.find_element("By.css_selector", "wui-wallet-image[name='OKX Wallet']").click()
-#driver.find_element("By.css_selector", "document.querySelectorAll('html > body > w3m-modal')[0].shadowRoot.querySelectorAll('wui-flex > wui-card > w3m-router')[0].shadowRoot.querySelectorAll('div > w3m-connect-view')[0].shadowRoot.querySelectorAll('wui-flex > wui-flex > w3m-connector-list')[0].shadowRoot.querySelectorAll('wui-flex > w3m-connect-injected-widget')[0].shadowRoot.querySelectorAll('wui-flex > wui-list-wallet')[0].shadowRoot.querySelectorAll('button')[0]").click()
-#driver.find_element("xpath", "/html/body/w3m-modal//wui-flex/wui-card/w3m-router//div/w3m-connect-view//wui-flex/wui-flex/w3m-connector-list//wui-flex/w3m-connect-injected-widget//wui-flex/wui-list-wallet//button").click()
+print(time.strftime("%H:%M:%S", time.localtime(time.time())), 'switch to the wallet window')
+window_handles = driver.window_handles
+driver.switch_to.window(window_handles[-1])
 time.sleep(3)
-driver.switch_to.window(window_handles[1])
+#print(time.strftime("%H:%M:%S", time.localtime(time.time())), 'refresh the wallet window')
+#driver.refresh()
 time.sleep(3)
-driver.refresh()
+print(time.strftime("%H:%M:%S", time.localtime(time.time())), 'now to click the connect button')
+driver.find_element("xpath", "//*[@id='app']/div/div/div/div/div[5]/div[2]/button[2]/span/div").click()  #click the connect button
 time.sleep(3)
-driver.find_element("xpath", "//*[@id='app-content']/div/div/div/div[2]/div/div[3]/div/div[2]/button[2]").click()  #click the connect button
-time.sleep(6)
+print(time.strftime("%H:%M:%S", time.localtime(time.time())), 'switch to the first window')
 driver.switch_to.window(window_handles[0])
 time.sleep(3)
-driver.find_element("xpath", "/html/body/w3m-modal//wui-flex/wui-card/w3m-router//div/w3m-unsupported-chain-view//wui-flex/wui-flex[2]/wui-list-network//button/wui-flex/wui-text").click()
-time.sleep(3)
-driver.switch_to.window(window_handles[1])
-time.sleep(3)
-driver.refresh()
-time.sleep(3)
-driver.find_element("xpath", "//*[@id='app-content']/div/div/div/div[2]/div/button[2]").click()  #click the connect button
+print(time.strftime("%H:%M:%S", time.localtime(time.time())), 'click the arbitrum one button')
+actions.move_by_offset(606, 187).click().perform()    #click the okx wallet button
 time.sleep(6)
-driver.switch_to.window(window_handles[0])
+driver.get("chrome-extension://gniabnkpabeeokgnkcfnlbgdnngddeeb/notification.html#/initialize")
 time.sleep(3)
 driver.find_element("xpath", "//*[@id='link-wallet-tooltip']/span").click()
 time.sleep(3)
-driver.switch_to.window(window_handles[1])
+#driver.refresh()
+window_handles = driver.window_handles
+driver.switch_to.window(window_handles[-1])
 time.sleep(3)
-driver.refresh()
-time.sleep(3)
+print(time.strftime("%H:%M:%S", time.localtime(time.time())), 'click the confirm button')
 driver.find_element("xpath", "//*[@id='app-content']/div/div/div/div/div[3]/button[2]").click()
 time.sleep(6)
 driver.switch_to.window(window_handles[0])

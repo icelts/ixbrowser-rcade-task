@@ -14,14 +14,15 @@ Note: 20250121
 测试了phantom和metamask以及okx三个钱包，基本上要做自动化的时候使用okx是最好的选择，步骤少，支持的网络比较多
 浏览器打开的时候会插件会弹出窗口，这个可以通过设置chrome的参数来屏蔽(我没有测试)，
 也可以通过代码来关闭：
-window_handles = driver.window_handles
-# 切换到新窗口
-driver.switch_to.window(window_handles[-1])
-# 关闭新窗口
-driver.close()
+window_handles = driver.window_handles    #获取所有窗口的句柄
+driver.switch_to.window(window_handles[-1])  #切换到最后一个打开的窗口
+driver.close()    #关闭当前窗口
 同时要操作OKX插件可以在新的标签页里面加载插件的初始化界面：chrome-extension://gniabnkpabeeokgnkcfnlbgdnngddeeb/notification.html#/initialize
 这个界面的地址可以在弹窗上面获得，但是要注意每一次调用插件的时候都需要切换到插件所在的标签页刷新页面重新加载才可以‘’
 
+Note: 20250122
+插件的欢迎页面和弹窗打开的顺序并不是固定的，所以有时候会把欢迎页面关闭掉，所以这个时候需要在遍历所有的窗口句柄以后跟根据窗口的标题来关闭对应的窗口
+这样就能精确的定位到要关闭或者操作的任何一个窗口
 
 简单参考
 ```python
