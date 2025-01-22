@@ -8,6 +8,9 @@ from selenium.webdriver import Chrome
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.action_chains import ActionChains
+from imgdetect import capture_and_find_egg ,click_egg,click_skip,find_and_click_eggs
+
+
 
 c = IXBrowserClient()
 c.show_request_log = True
@@ -62,7 +65,7 @@ driver = Chrome(service=Service(web_driver_path), options=chrome_options)
 print(time.strftime("%H:%M:%S", time.localtime(time.time())), 'Visit the ixBrowser homepage by default')
 driver.get("https://hatchlings.revolvinggames.com/?cache=false")
 print(time.strftime("%H:%M:%S", time.localtime(time.time())), 'Automatically exit after 30 seconds')
-time.sleep(30)
+time.sleep(15)
 window_handles = driver.window_handles
 # 切换到新窗口
 driver.switch_to.window(window_handles[-1])
@@ -97,7 +100,7 @@ driver.find_element("xpath", "//*[@id='app']/div/div/div/div[3]/div/div[1]/div[2
 time.sleep(2)                           #
 driver.find_element("xpath", "//*[@id='app']/div/div[1]/div/div[2]/div/div[1]/div/div[2]/div/div[2]").click() #click the privte key button
 time.sleep(2)
-driver.find_element("xpath", "//*[@id='app']/div/div[1]/div/div[2]/div/div[2]/div/div/form/div[2]/div/textarea").send_keys('0x0cba4bf639e123a7e8893b5b9addb134f0cac5ffd47f2c3151aae5fe1ffd31cd')
+driver.find_element("xpath", "//*[@id='app']/div/div[1]/div/div[2]/div/div[2]/div/div/form/div[2]/div/textarea").send_keys('0xe9994928447b2cccdf4141c6ca87c8e9c05f848ccbae71d13672a8e874f41ccc')
 time.sleep(6)
 time.sleep(2)
 driver.find_element("xpath", "//*[@id='app']/div/div[2]/div/button").click() #click the confirm button
@@ -194,33 +197,51 @@ def get_element_center_coordinates(driver, element):
 window_handles = driver.window_handles
 driver.switch_to.window(window_handles[-1])
 time.sleep(16)  # 等待游戏加载
+click_skip(driver, 10)
 
-# 获取 unity canvas 元素
-unity_canvas = driver.find_element("xpath", "//*[@id='unity-canvas']")
-
-# 获取画布尺寸
-canvas_size = unity_canvas.size
-print(f"画布尺寸: {canvas_size}")
-
-# 计算画布内的安全点击坐标
-safe_offset_x = min(400, canvas_size['width'] - 50)  # 距离边缘保持50px
-safe_offset_y = min(400, canvas_size['height'] - 50)  # 距离边缘保持50px
-
-actions = ActionChains(driver)
-
-# 多次点击并进行错误处理
-for i in range(1, 10):
-    try:
-        # 相对于画布元素移动到安全坐标
-        actions.move_to_element(unity_canvas)\
-               .move_by_offset(safe_offset_x - canvas_size['width']/2,
-                             safe_offset_y - canvas_size['height']/2)\
-               .click()\
-               .perform()
-        print(f"第 {i} 次点击成功，坐标: ({safe_offset_x}, {safe_offset_y})")
-        time.sleep(3)
+#下面开始多次循环找图做任务，直到完成500个点数的任务
+for i in range(1, 500):
+    try:  # 循环找图，直到找到目标并点击成功
+        unity_canvas = driver.find_element("xpath", "//*[@id='unity-canvas']")
+        template_paths ={r"C:\Users\a2720\PycharmProjects\ixbrowser-local-api-python\imgs\egg.bmp"}
+        found = find_and_click_eggs(driver, unity_canvas, template_paths, threshold=0.8)
+        if found:
+            unity_canvas = driver.find_element("xpath", "//*[@id='unity-canvas']")
+            template_paths = {r"C:\Users\a2720\PycharmProjects\ixbrowser-local-api-python\imgs\hatch.bmp"}
+            found = find_and_click_eggs(driver, unity_canvas, template_paths, threshold=0.8)
+            if found:
+                click_skip(driver, 20)  # 连续点击20次才会进入交互界面
+            else:
+                print(f"未能成功点击目标:hatch.bmp")
+        else:
+            print(f"未能成功点击目标:egg.bmp")
+        #所有的动作从play开始，如果找不到就让宠物休息，找到以后依次play,喂养，shop领取，egg激活，玩具放置
+        unity_canvas = driver.find_element("xpath", "//*[@id='unity-canvas']")   #如果找不到就说明该宠物需要休息了，就开始需寻找休息的图标
+        template_paths = {r"C:\Users\a2720\PycharmProjects\ixbrowser-local-api-python\imgs\play.bmp"}
+        found = capture_and_find_egg(driver, unity_canvas, r"C:\Users\a2720\PycharmProjects\ixbrowser-local-api-python\imgs\play.bmp", threshold=0.8)
+        if found:
+            print(f"找到目标，坐标: egg.bmp")
+                #继续点击下一张图喂养
+                unity_canvas = driver.find_element("xpath", "//*[@id='unity-canvas']") #如果找不到喂养说明吃饱了，下一步就寻找新蛋，新的奖励以及放置玩具
+                found, coordinates = capture_and_find_egg(driver, unity_canvas,
+                                                          r"C:\Users\a2720\PycharmProjects\ixbrowser-local-api-python\imgs\feed.bmp",
+                                                          threshold=0.8)
+                if found:
+                    print(f"找到目标，坐标: {coordinates}")
+                    if click_egg(driver, unity_canvas, coordinates):
+                        print("点击成功")
+                        click_skip(driver, 20) #连续点击20次才会进入交互界面
+                else:
+                    print(f"未能成功点击目标:fdde.bmp")
+        else:
+            print(f"未能成功点击目标:play.bmp，开始寻找休息信息")
+            unity_canvas = driver.find_element("xpath", "//*[@id='unity-canvas']")
+            template_paths={r"C:\Users\a2720\PycharmProjects\ixbrowser-local-api-python\imgs\rest.bmp"}
+            found = find_and_click_eggs(driver, unity_canvas, template_paths, threshold=0.8)
+            if found:
+                print(f"找到目标，坐标: {coordinates}")
+            else:
+                print(f"未能成功点击目标:rest.bmp")
     except Exception as e:
-        print(f"第 {i} 次点击失败: {str(e)}")
-        # 发生错误后重置 action chains
-        actions = ActionChains(driver)
-        time.sleep(1)
+        print(f"发生错误: {e}")
+
