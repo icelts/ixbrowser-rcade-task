@@ -244,115 +244,75 @@ def feed_pets(driver):
             found = find_and_click_eggs(driver, unity_canvas, template_paths)
 
 def grab_shop(driver):
-    # 查找grains并喂食
+    # 默认第一个是egg界面
     unity_canvas = driver.find_element("xpath", "//*[@id='unity-canvas']")  # 寻找食物，开始喂食
     template_paths = {r"C:\Users\a2720\PycharmProjects\ixbrowser-local-api-python\imgs\free.bmp"}
     found = find_and_click_eggs(driver, unity_canvas, template_paths)
     if found:
-        print(f"找到grains")
-        unity_canvas = driver.find_element("xpath", "//*[@id='unity-canvas']")  # 寻找食物，开始喂食
-        template_paths = {r"C:\Users\a2720\PycharmProjects\ixbrowser-local-api-python\imgs\give.bmp"}
+        print(f"找到egg，已经领取egg")
+        unity_canvas = driver.find_element("xpath", "//*[@id='unity-canvas']")
+        template_paths = {r"C:\Users\a2720\PycharmProjects\ixbrowser-local-api-python\imgs\ok.bmp"}
         found = find_and_click_eggs(driver, unity_canvas, template_paths)
         if found:
-            print(f"成功喂食，下一步关闭界面")
-            unity_canvas = driver.find_element("xpath", "//*[@id='unity-canvas']")  # 寻找食物，开始喂食
-            template_paths = {r"C:\Users\a2720\PycharmProjects\ixbrowser-local-api-python\imgs\close.bmp"}
-            found = find_and_click_eggs(driver, unity_canvas, template_paths)
-    #查找berries并喂食
+            print(f"成功点击ok按钮")
+    #查找decorations界面
     unity_canvas = driver.find_element("xpath", "//*[@id='unity-canvas']")  # 寻找食物，开始喂食
-    template_paths = {r"C:\Users\a2720\PycharmProjects\ixbrowser-local-api-python\imgs\berries.bmp"}
+    template_paths = {r"C:\Users\a2720\PycharmProjects\ixbrowser-local-api-python\imgs\decorations.bmp"}
     found = find_and_click_eggs(driver, unity_canvas, template_paths)
     if found:
-        print(f"找到berries")
-        unity_canvas = driver.find_element("xpath", "//*[@id='unity-canvas']")  # 寻找食物，开始喂食
-        template_paths = {r"C:\Users\a2720\PycharmProjects\ixbrowser-local-api-python\imgs\give.bmp"}
+        print(f"找到decorations")
+        unity_canvas = driver.find_element("xpath", "//*[@id='unity-canvas']")  # 寻找领取免费物品按钮
+        template_paths = {r"C:\Users\a2720\PycharmProjects\ixbrowser-local-api-python\imgs\free.bmp"}
         found = find_and_click_eggs(driver, unity_canvas, template_paths)
         if found:
-            print(f"成功喂食，下一步关闭界面")
-            unity_canvas = driver.find_element("xpath", "//*[@id='unity-canvas']")  # 寻找食物，开始喂食
-            template_paths = {r"C:\Users\a2720\PycharmProjects\ixbrowser-local-api-python\imgs\close.bmp"}
+            print(f"成功领取decorations")
+            unity_canvas = driver.find_element("xpath", "//*[@id='unity-canvas']")
+            template_paths = {r"C:\Users\a2720\PycharmProjects\ixbrowser-local-api-python\imgs\ok.bmp"}
             found = find_and_click_eggs(driver, unity_canvas, template_paths)
-    #查找mushrooms并喂食
-    unity_canvas = driver.find_element("xpath", "//*[@id='unity-canvas']")  # 寻找食物，开始喂食
-    template_paths = {r"C:\Users\a2720\PycharmProjects\ixbrowser-local-api-python\imgs\mushrooms.bmp"}
+    #查找habitat界面
+    unity_canvas = driver.find_element("xpath", "//*[@id='unity-canvas']")
+    template_paths = {r"C:\Users\a2720\PycharmProjects\ixbrowser-local-api-python\imgs\habitat.bmp"}
     found = find_and_click_eggs(driver, unity_canvas, template_paths)
     if found:
-        print(f"找到mushrooms")
-        unity_canvas = driver.find_element("xpath", "//*[@id='unity-canvas']")  # 寻找食物，开始喂食
-        template_paths = {r"C:\Users\a2720\PycharmProjects\ixbrowser-local-api-python\imgs\give.bmp"}
+        print(f"找到habitat")
+        unity_canvas = driver.find_element("xpath", "//*[@id='unity-canvas']")
+        template_paths = {r"C:\Users\a2720\PycharmProjects\ixbrowser-local-api-python\imgs\free.bmp"}
         found = find_and_click_eggs(driver, unity_canvas, template_paths)
         if found:
-            print(f"成功喂食，下一步关闭界面")
-            unity_canvas = driver.find_element("xpath", "//*[@id='unity-canvas']")  # 寻找食物，开始喂食
-            template_paths = {r"C:\Users\a2720\PycharmProjects\ixbrowser-local-api-python\imgs\close.bmp"}
+            print(f"成功领取habitat")
+            unity_canvas = driver.find_element("xpath", "//*[@id='unity-canvas']")
+            template_paths = {r"C:\Users\a2720\PycharmProjects\ixbrowser-local-api-python\imgs\ok.bmp"}
             found = find_and_click_eggs(driver, unity_canvas, template_paths)
-    #查找granola并喂食
+    #查找food界面
     unity_canvas = driver.find_element("xpath", "//*[@id='unity-canvas']")  # 寻找食物，开始喂食
-    template_paths = {r"C:\Users\a2720\PycharmProjects\ixbrowser-local-api-python\imgs\granola.bmp"}
+    template_paths = {r"C:\Users\a2720\PycharmProjects\ixbrowser-local-api-python\imgs\food.bmp"}
     found = find_and_click_eggs(driver, unity_canvas, template_paths)
     if found:
-        print(f"找到granola")
+        print(f"找到food界面")
         unity_canvas = driver.find_element("xpath", "//*[@id='unity-canvas']")  # 寻找食物，开始喂食
-        template_paths = {r"C:\Users\a2720\PycharmProjects\ixbrowser-local-api-python\imgs\give.bmp"}
+        template_paths = {r"C:\Users\a2720\PycharmProjects\ixbrowser-local-api-python\imgs\free.bmp"}
         found = find_and_click_eggs(driver, unity_canvas, template_paths)
         if found:
-            print(f"成功喂食，下一步关闭界面")
+            print(f"成功领取food")
             unity_canvas = driver.find_element("xpath", "//*[@id='unity-canvas']")  # 寻找食物，开始喂食
-            template_paths = {r"C:\Users\a2720\PycharmProjects\ixbrowser-local-api-python\imgs\close.bmp"}
+            template_paths = {r"C:\Users\a2720\PycharmProjects\ixbrowser-local-api-python\imgs\ok.bmp"}
             found = find_and_click_eggs(driver, unity_canvas, template_paths)
-    #查找bowl并喂食
+    #查找currency
     unity_canvas = driver.find_element("xpath", "//*[@id='unity-canvas']")  # 寻找食物，开始喂食
-    template_paths = {r"C:\Users\a2720\PycharmProjects\ixbrowser-local-api-python\imgs\bowl.bmp"}
+    template_paths = {r"C:\Users\a2720\PycharmProjects\ixbrowser-local-api-python\imgs\currency.bmp"}
     found = find_and_click_eggs(driver, unity_canvas, template_paths)
     if found:
-        print(f"找到bowl")
+        print(f"找到currency")
         unity_canvas = driver.find_element("xpath", "//*[@id='unity-canvas']")  # 寻找食物，开始喂食
-        template_paths = {r"C:\Users\a2720\PycharmProjects\ixbrowser-local-api-python\imgs\give.bmp"}
+        template_paths = {r"C:\Users\a2720\PycharmProjects\ixbrowser-local-api-python\imgs\free.bmp"}
         found = find_and_click_eggs(driver, unity_canvas, template_paths)
         if found:
-            print(f"成功喂食，下一步关闭界面")
+            print(f"成功领取currency")
             unity_canvas = driver.find_element("xpath", "//*[@id='unity-canvas']")  # 寻找食物，开始喂食
-            template_paths = {r"C:\Users\a2720\PycharmProjects\ixbrowser-local-api-python\imgs\close.bmp"}
+            template_paths = {r"C:\Users\a2720\PycharmProjects\ixbrowser-local-api-python\imgs\ok.bmp"}
             found = find_and_click_eggs(driver, unity_canvas, template_paths)
-    #查找medley并喂食
     unity_canvas = driver.find_element("xpath", "//*[@id='unity-canvas']")  # 寻找食物，开始喂食
-    template_paths = {r"C:\Users\a2720\PycharmProjects\ixbrowser-local-api-python\imgs\medley.bmp"}
+    template_paths = {r"C:\Users\a2720\PycharmProjects\ixbrowser-local-api-python\imgs\close.bmp"}
     found = find_and_click_eggs(driver, unity_canvas, template_paths)
     if found:
-        print(f"找到medley")
-        unity_canvas = driver.find_element("xpath", "//*[@id='unity-canvas']")  # 寻找食物，开始喂食
-        template_paths = {r"C:\Users\a2720\PycharmProjects\ixbrowser-local-api-python\imgs\give.bmp"}
-        found = find_and_click_eggs(driver, unity_canvas, template_paths)
-        if found:
-            print(f"成功喂食，下一步关闭界面")
-            unity_canvas = driver.find_element("xpath", "//*[@id='unity-canvas']")  # 寻找食物，开始喂食
-            template_paths = {r"C:\Users\a2720\PycharmProjects\ixbrowser-local-api-python\imgs\close.bmp"}
-            found = find_and_click_eggs(driver, unity_canvas, template_paths)
-    #查找scone并喂食
-    unity_canvas = driver.find_element("xpath", "//*[@id='unity-canvas']")  # 寻找食物，开始喂食
-    template_paths = {r"C:\Users\a2720\PycharmProjects\ixbrowser-local-api-python\imgs\scone.bmp"}
-    found = find_and_click_eggs(driver, unity_canvas, template_paths)
-    if found:
-        print(f"找到scone")
-        unity_canvas = driver.find_element("xpath", "//*[@id='unity-canvas']")  # 寻找食物，开始喂食
-        template_paths = {r"C:\Users\a2720\PycharmProjects\ixbrowser-local-api-python\imgs\give.bmp"}
-        found = find_and_click_eggs(driver, unity_canvas, template_paths)
-        if found:
-            print(f"成功喂食，下一步关闭界面")
-            unity_canvas = driver.find_element("xpath", "//*[@id='unity-canvas']")  # 寻找食物，开始喂食
-            template_paths = {r"C:\Users\a2720\PycharmProjects\ixbrowser-local-api-python\imgs\close.bmp"}
-            found = find_and_click_eggs(driver, unity_canvas, template_paths)
-    #查找cookies并喂食
-    unity_canvas = driver.find_element("xpath", "//*[@id='unity-canvas']")  # 寻找食物，开始喂食
-    template_paths = {r"C:\Users\a2720\PycharmProjects\ixbrowser-local-api-python\imgs\cookies.bmp"}
-    found = find_and_click_eggs(driver, unity_canvas, template_paths)
-    if found:
-        print(f"找到cookies")
-        unity_canvas = driver.find_element("xpath", "//*[@id='unity-canvas']")  # 寻找食物，开始喂食
-        template_paths = {r"C:\Users\a2720\PycharmProjects\ixbrowser-local-api-python\imgs\give.bmp"}
-        found = find_and_click_eggs(driver, unity_canvas, template_paths)
-        if found:
-            print(f"成功喂食，下一步关闭界面")
-            unity_canvas = driver.find_element("xpath", "//*[@id='unity-canvas']")  # 寻找食物，开始喂食
-            template_paths = {r"C:\Users\a2720\PycharmProjects\ixbrowser-local-api-python\imgs\close.bmp"}
-            found = find_and_click_eggs(driver, unity_canvas, template_paths)
+        print(f"找到close,关闭商店界面")
