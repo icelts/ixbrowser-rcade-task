@@ -75,7 +75,7 @@ class GameAutomationTask:
             profile_result = self.setup_profile()
 
             # Setup proxy
-            self.setup_proxy(profile_result)
+            #self.setup_proxy(profile_result)
 
             # Open profile
             open_result = self.client.open_profile(
@@ -148,9 +148,24 @@ class AutomationManager:
         self.task_queue = queue.Queue()
 
     def _load_private_keys(self) -> List[str]:
-        """Load private keys from a file"""
+        """
+        Load private keys from a file where each line is comma-separated,
+        and the private key is the third element.
+
+        Example line format:
+        data1,data2,0x1234567890abcdef,data4
+        """
+        private_keys = []
         with open('private_keys.txt', 'r') as f:
-            return [line.strip() for line in f if line.strip()]
+            for line in f:
+                line = line.strip()
+                if line:
+                    parts = line.split(',')
+                    if len(parts) >= 3:
+                        private_keys.append(parts[2])
+                    else:
+                        logging.warning(f"Skipping invalid line: {line}")
+        return private_keys
 
     def _load_proxies(self) -> List[dict]:
         """Load proxy information"""
