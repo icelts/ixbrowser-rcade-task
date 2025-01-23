@@ -8,8 +8,7 @@ from selenium.webdriver import Chrome
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.action_chains import ActionChains
-from imgdetect import grab_shop ,feed_pets,click_skip,find_and_click_eggs,capture_and_find_egg
-
+from imgdetect import grab_shop ,feed_pets,click_skip,find_and_click_eggs,setup_pet
 
 
 c = IXBrowserClient()
@@ -100,7 +99,7 @@ driver.find_element("xpath", "//*[@id='app']/div/div/div/div[3]/div/div[1]/div[2
 time.sleep(2)                           #
 driver.find_element("xpath", "//*[@id='app']/div/div[1]/div/div[2]/div/div[1]/div/div[2]/div/div[2]").click() #click the privte key button
 time.sleep(2)
-driver.find_element("xpath", "//*[@id='app']/div/div[1]/div/div[2]/div/div[2]/div/div/form/div[2]/div/textarea").send_keys('0x2adbe818758847aed26feea09756a032b96daacd1e35d42df2e66a1002549c33')
+driver.find_element("xpath", "//*[@id='app']/div/div[1]/div/div[2]/div/div[2]/div/div/form/div[2]/div/textarea").send_keys('0x0c52145465e49c71ea9fc5fe7c7ae06e69e0e055d8944784cc6d6d03ac443d5a')
 time.sleep(6)
 time.sleep(2)
 driver.find_element("xpath", "//*[@id='app']/div/div[2]/div/button").click() #click the confirm button
@@ -217,8 +216,9 @@ for i in range(1, 20):
                 print(f"未能成功点击目标:hatch.bmp")
         else:
             print(f"未能成功点击目标:egg.bmp")
+
         #所有的动作从play开始，如果找不到就让宠物休息，找到以后依次play,喂养，shop领取，egg激活，玩具放置，然后点击下一个页面进去喂养
-        for i in range(1, 7):
+        for i in range(1, 10):
             unity_canvas = driver.find_element("xpath", "//*[@id='unity-canvas']")  # 直接play6次
             template_paths = {r"C:\Users\a2720\PycharmProjects\ixbrowser-local-api-python\imgs\play.bmp"}
             found = find_and_click_eggs(driver, unity_canvas, template_paths)
@@ -228,7 +228,7 @@ for i in range(1, 20):
         template_paths = {r"C:\Users\a2720\PycharmProjects\ixbrowser-local-api-python\imgs\clean.bmp"}
         found = find_and_click_eggs(driver, unity_canvas, template_paths)
         ## 开始投喂
-        for i in range(1, 3):
+        for i in range(1, 6):
             unity_canvas = driver.find_element("xpath", "//*[@id='unity-canvas']")
             template_paths = {r"C:\Users\a2720\PycharmProjects\ixbrowser-local-api-python\imgs\feed.bmp"}
             found = find_and_click_eggs(driver, unity_canvas, template_paths)
@@ -242,76 +242,13 @@ for i in range(1, 20):
         if found:
             # 收取奖品
             grab_shop(driver)
-        #检测龙蛋页面，有蛋就激活
+        #检测龙蛋页面，有蛋就激活，并直接释放宠物，如果当前页面有宠物就切换到下一个页面
         unity_canvas = driver.find_element("xpath", "//*[@id='unity-canvas']")  # 如果商店
         template_paths = {r"C:\Users\a2720\PycharmProjects\ixbrowser-local-api-python\imgs\longdanjihuo.bmp"}
         found = find_and_click_eggs(driver, unity_canvas, template_paths)
         if found:
             print(f"打开龙蛋界面,开始激活龙蛋")
-            unity_canvas = driver.find_element("xpath", "//*[@id='unity-canvas']")  # 如果商店
-            template_paths = {r"C:\Users\a2720\PycharmProjects\ixbrowser-local-api-python\imgs\newegg.bmp"}
-            found = find_and_click_eggs(driver, unity_canvas, template_paths)
-            if found:
-                print(f"找到新龙蛋，激活")
-                unity_canvas = driver.find_element("xpath", "//*[@id='unity-canvas']")  # 如果商店
-                template_paths = {r"C:\Users\a2720\PycharmProjects\ixbrowser-local-api-python\imgs\hatch.bmp"}
-                found = find_and_click_eggs(driver, unity_canvas, template_paths)
-                if found:
-                    print(f"成功激活龙蛋")
-                    time.sleep(10)
-                    unity_canvas = driver.find_element("xpath", "//*[@id='unity-canvas']")  # 如果商店
-                    template_paths = {r"C:\Users\a2720\PycharmProjects\ixbrowser-local-api-python\imgs\close2.bmp"}
-                    found = find_and_click_eggs(driver, unity_canvas, template_paths)
-                    unity_canvas = driver.find_element("xpath", "//*[@id='unity-canvas']")  # 进入下一个宠物界面
-                    template_paths = {r"C:\Users\a2720\PycharmProjects\ixbrowser-local-api-python\imgs\next.bmp"}
-                    found = find_and_click_eggs(driver, unity_canvas, template_paths)
-            else:
-                print(f"未找到新龙蛋，关闭")
-                time.sleep(3)
-                unity_canvas = driver.find_element("xpath", "//*[@id='unity-canvas']")  # 如果商店
-                template_paths = {r"C:\Users\a2720\PycharmProjects\ixbrowser-local-api-python\imgs\close2.bmp"}
-                found = find_and_click_eggs(driver, unity_canvas, template_paths)
-
-        #放置龙蛋
-        unity_canvas = driver.find_element("xpath", "//*[@id='unity-canvas']")  # 如果商店
-        template_paths = {r"C:\Users\a2720\PycharmProjects\ixbrowser-local-api-python\imgs\longdanjihuo.bmp"}
-        found = find_and_click_eggs(driver, unity_canvas, template_paths)
-        if found:
-            print(f"打开龙蛋界面,开始放置龙蛋")
-            unity_canvas = driver.find_element("xpath", "//*[@id='unity-canvas']")  # 如果商店
-            template_paths = {r"C:\Users\a2720\PycharmProjects\ixbrowser-local-api-python\imgs\nursery.bmp"}
-            found = find_and_click_eggs(driver, unity_canvas, template_paths)
-            if found:
-                unity_canvas = driver.find_element("xpath", "//*[@id='unity-canvas']")  # 如果商店
-                template_paths = {r"C:\Users\a2720\PycharmProjects\ixbrowser-local-api-python\imgs\adopt.bmp"}
-                found = find_and_click_eggs(driver, unity_canvas, template_paths)
-                if found:
-                    print(f"找到目标，坐标: adopt.bmp")
-                    #下一步检测是否成功放置
-                    unity_canvas = driver.find_element("xpath", "//*[@id='unity-canvas']")  # 如果商店
-                    template_paths = {r"C:\Users\a2720\PycharmProjects\ixbrowser-local-api-python\imgs\release.bmp"}
-                    fund = capture_and_find_egg(driver, unity_canvas, template_paths, threshold=0.8)
-                    if fund:
-                        print(f"当前界面已经有龙了")
-                        unity_canvas = driver.find_element("xpath", "//*[@id='unity-canvas']")  # 如果商店
-                        template_paths = {r"C:\Users\a2720\PycharmProjects\ixbrowser-local-api-python\imgs\close3.bmp"}
-                        found = find_and_click_eggs(driver, unity_canvas, template_paths)
-                        if found:
-                            print(f"关闭龙蛋界面")
-                            time.sleep(2)
-                            unity_canvas = driver.find_element("xpath", "//*[@id='unity-canvas']")  # 如果商店
-                            template_paths = {r"C:\Users\a2720\PycharmProjects\ixbrowser-local-api-python\imgs\close2.bmp"}
-                            found = find_and_click_eggs(driver, unity_canvas, template_paths)
-                    else:
-                        print(f"成功放置龙宝宝")
-                        unity_canvas = driver.find_element("xpath", "//*[@id='unity-canvas']")  # 如果商店
-                        template_paths = {r"C:\Users\a2720\PycharmProjects\ixbrowser-local-api-python\imgs\last.bmp"}
-                        found = find_and_click_eggs(driver, unity_canvas, template_paths)
-                else:
-                    print(f"当前没有龙，关闭")
-                    unity_canvas = driver.find_element("xpath", "//*[@id='unity-canvas']")  # 如果商店
-                    template_paths = {r"C:\Users\a2720\PycharmProjects\ixbrowser-local-api-python\imgs\close2.bmp"}
-                    found = find_and_click_eggs(driver, unity_canvas, template_paths)
+            setup_pet(driver)
 
         #所有任务完成以后点击图标进入下一个页面
         unity_canvas = driver.find_element("xpath", "//*[@id='unity-canvas']")  # 进入下一个宠物界面
