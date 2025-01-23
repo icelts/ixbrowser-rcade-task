@@ -99,7 +99,7 @@ driver.find_element("xpath", "//*[@id='app']/div/div/div/div[3]/div/div[1]/div[2
 time.sleep(2)                           #
 driver.find_element("xpath", "//*[@id='app']/div/div[1]/div/div[2]/div/div[1]/div/div[2]/div/div[2]").click() #click the privte key button
 time.sleep(2)
-driver.find_element("xpath", "//*[@id='app']/div/div[1]/div/div[2]/div/div[2]/div/div/form/div[2]/div/textarea").send_keys('0x0c52145465e49c71ea9fc5fe7c7ae06e69e0e055d8944784cc6d6d03ac443d5a')
+driver.find_element("xpath", "//*[@id='app']/div/div[1]/div/div[2]/div/div[2]/div/div/form/div[2]/div/textarea").send_keys('0xcd81f5478da365d19dae6f3066983df7cfec36114be1d727013641f671412f65')
 time.sleep(6)
 time.sleep(2)
 driver.find_element("xpath", "//*[@id='app']/div/div[2]/div/button").click() #click the confirm button
@@ -228,7 +228,7 @@ for i in range(1, 20):
         template_paths = {r"C:\Users\a2720\PycharmProjects\ixbrowser-local-api-python\imgs\clean.bmp"}
         found = find_and_click_eggs(driver, unity_canvas, template_paths)
         ## 开始投喂
-        for i in range(1, 6):
+        for i in range(1, 3):
             unity_canvas = driver.find_element("xpath", "//*[@id='unity-canvas']")
             template_paths = {r"C:\Users\a2720\PycharmProjects\ixbrowser-local-api-python\imgs\feed.bmp"}
             found = find_and_click_eggs(driver, unity_canvas, template_paths)
