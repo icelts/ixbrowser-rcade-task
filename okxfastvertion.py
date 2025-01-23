@@ -73,7 +73,7 @@ print("第二个标签页,start to setup wallet:", driver.title)
 time.sleep(3)
 
 #import the wallet
-import_wallet(driver,'0x7a5c535e67a56fddf2fd0eb224f5be2952cab55f306cca76b09f07d896b273d8')
+import_wallet(driver,'0xad1dc15b6242aa1ce7f4f0ac05a960d132eb65dc9e408efc9bb26bba070f4e0d')
 
 time.sleep(6)
 print(time.strftime("%H:%M:%S", time.localtime(time.time())), '选蛋')
@@ -83,7 +83,7 @@ window_handles = driver.window_handles
 window_handles = driver.window_handles
 driver.switch_to.window(window_handles[-1])
 time.sleep(16)  # 等待游戏加载
-click_skip(driver, 10)
+click_skip(driver, 13)
 
 #下面开始多次循环找图做任务，直到完成500个点数的任务
 for i in range(1, 3):

@@ -124,7 +124,7 @@ def click_skip(driver,clicknumber):
                 .click() \
                 .perform()
             print(f"第 {i} 次点击成功，坐标: ({safe_offset_x}, {safe_offset_y})")
-            time.sleep(3)
+            time.sleep(1)
         except Exception as e:
             print(f"第 {i} 次点击失败: {str(e)}")
             # 发生错误后重置 action chains
