@@ -8,7 +8,7 @@ from selenium.webdriver import Chrome
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.action_chains import ActionChains
-from imgdetect import grab_shop ,feed_pets,click_skip,find_and_click_eggs,setup_pet,rest_all_pets
+from imgdetect import grab_shop ,feed_pets,click_skip,find_and_click_eggs,setup_pet,rest_all_pets,import_wallet,get_element_center_coordinates
 
 
 c = IXBrowserClient()
@@ -29,7 +29,7 @@ else:
     print(time.strftime("%H:%M:%S", time.localtime(time.time())), 'result:', result)
 
 #setup the profile proxy
-proxy=getproxy_wwp.get_proxy_info('UK-cccf495f-69b5-4896-8b67-b43a5873267b')
+proxy=getproxy_wwp.get_proxy_info('UK-c972c39e-fb52-42b8-aa06-5c9a45522001')
 proxy_type = 'direct'
 proxy_ip = proxy['ip']
 proxy_port = proxy['port']
@@ -55,9 +55,6 @@ debugging_address = open_result['debugging_address']
 chrome_options = Options()
 chrome_options.add_experimental_option("debuggerAddress", debugging_address)
 
-# selenium 3 version
-# driver = Chrome(web_driver_path, chrome_options=chrome_options)
-
 # selenium 4 and above
 driver = Chrome(service=Service(web_driver_path), options=chrome_options)
 
@@ -74,123 +71,13 @@ driver.switch_to.window(window_handles[-1])
 #driver.switch_to.window(window_handles[1])  # 切换到第二个标签页
 print("第二个标签页,start to setup wallet:", driver.title)
 time.sleep(3)
-window_handles = driver.window_handles
 
-# 遍历每个窗口句柄
-for handle in window_handles:
-    driver.switch_to.window(handle)
-    title = driver.title
-    print(f"Window Handle: {handle}, Title: {title}")
+#import the wallet
+import_wallet(driver,'0x0189deb0b34a2cd2842483c7835a94be34520c01891eb9b24a125ba420452fdd')
 
-    # 如果标题是 "OKX Wallet"，则在该窗口中打开指定页面
-    if title == "OKX Wallet":
-        print("Found OKX Wallet window. Opening the extension page...")
-        driver.get("chrome-extension://gniabnkpabeeokgnkcfnlbgdnngddeeb/notification.html#/initialize")
-        break  # 退出循环
-
-# 如果没有找到标题为 "OKX Wallet" 的窗口
-else:
-    print("No window with title 'OKX Wallet' found.")
-time.sleep(3)
-driver.find_element("xpath", "//*[@id='app']/div/div/div/div[3]/div/div[2]/button/span").click() #click the import button
-time.sleep(2)
-
-driver.find_element("xpath", "//*[@id='app']/div/div/div/div[3]/div/div[1]/div[2]/div").click() #click the creat button
-time.sleep(2)                           #
-driver.find_element("xpath", "//*[@id='app']/div/div[1]/div/div[2]/div/div[1]/div/div[2]/div/div[2]").click() #click the privte key button
-time.sleep(2)
-driver.find_element("xpath", "//*[@id='app']/div/div[1]/div/div[2]/div/div[2]/div/div/form/div[2]/div/textarea").send_keys('0xb49e5bb739b14ed564d6f310c6e10adc5825220f970c41582232c7bc0ff33e60')
-time.sleep(6)
-time.sleep(2)
-driver.find_element("xpath", "//*[@id='app']/div/div[2]/div/button").click() #click the confirm button
-time.sleep(3)
-driver.find_element("xpath", "//*[@id='app']/div/div/div/div[2]/div/div[2]/div/div[2]/div[2]/div[2]/button/span").click() #click the confirm button again
-time.sleep(3)
-driver.find_element("xpath", "//*[@id='app']/div/div/div/div[2]/div[3]/div[2]/div/div[1]").click()   #select password
-time.sleep(6)
-driver.find_element("xpath", "//*[@id='app']/div/div/div/div[2]/div[5]/div/button").click() #click notrecommend button
-time.sleep(6)
-driver.find_element("xpath", "//*[@id='app']/div/div[1]/div/div[2]/form/div[1]/div[2]/div/div/div/div/input").send_keys('Aa2006123!!')
-time.sleep(6)
-driver.find_element("xpath", "//*[@id='app']/div/div[1]/div/div[2]/form/div[3]/div[2]/div/div/div/div/input").send_keys('Aa2006123!!')
-time.sleep(10)
-driver.find_element("xpath", "//*[@id='app']/div/div[2]/div/button").click()#click confirm button
-time.sleep(25)
-#driver.find_element("xpath", "//*[@id='app']/div/div/div/div[4]/div/button").click()#click start button
-driver.close()
-time.sleep(3)
-driver.switch_to.window(window_handles[0])  # 切换到第1个标签页
-#the next step is game automatic,i will test if it work without image recognition.just click
-time.sleep(3)
-driver.refresh()
-time.sleep(10)
-driver.find_element("xpath", "//*[@id='root']/div[1]/div[2]/div/button/span").click() #click the play button
-time.sleep(3)
-driver.find_element("xpath", "//*[@id='link-wallet-tooltip']/span").click()
-time.sleep(5)
-# here is the problem, i can't click the okx wallet button, so i use the action chain to click the okx wallet button
-actions = ActionChains(driver)
-print(time.strftime("%H:%M:%S", time.localtime(time.time())), 'click the okx wallet button')
-actions.move_by_offset(606, 411).click().perform()    #click the okx wallet button
-time.sleep(3)
-print(time.strftime("%H:%M:%S", time.localtime(time.time())), 'switch to the wallet window')
-window_handles = driver.window_handles
-driver.switch_to.window(window_handles[-1])
-time.sleep(3)
-#print(time.strftime("%H:%M:%S", time.localtime(time.time())), 'refresh the wallet window')
-#driver.refresh()
-time.sleep(3)
-print(time.strftime("%H:%M:%S", time.localtime(time.time())), 'now to click the connect button')
-driver.find_element("xpath", "//*[@id='app']/div/div/div/div/div[5]/div[2]/button[2]/span/div").click()  #click the connect button
-time.sleep(3)
-print(time.strftime("%H:%M:%S", time.localtime(time.time())), 'switch to the first window')
-driver.switch_to.window(window_handles[0])
-time.sleep(3)
-print(time.strftime("%H:%M:%S", time.localtime(time.time())), 'click the arbitrum one button')
-actions.move_by_offset(606, 187).click().perform()    #click the okx wallet button
-time.sleep(6)
-driver.find_element("xpath", "//*[@id='link-wallet-tooltip']/span").click()
-time.sleep(6)
-window_handles = driver.window_handles
-driver.switch_to.window(window_handles[-1])
-time.sleep(3)
-print(time.strftime("%H:%M:%S", time.localtime(time.time())), 'click the confirm button')
-driver.find_element("xpath", "//*[@id='app']/div/div/div/div/div/div[4]/div/button[2]/span").click()
-time.sleep(6)                          #//*[@id='app']/div/div/div/div/div/div[4]/div/button[2]/span
-driver.switch_to.window(window_handles[0])
-time.sleep(3)
-print(time.strftime("%H:%M:%S", time.localtime(time.time())), 'click the close button')
-driver.find_element("xpath", "/html/body/div[5]/div/div/div/div[1]/button").click() #click the close button
-time.sleep(3)
-print(time.strftime("%H:%M:%S", time.localtime(time.time())), 'click the first input box')
-driver.find_element("xpath", "/html/body/div[4]/div/div/div/div[2]/div/div[2]/div[1]/input").click() #click the input box
-time.sleep(3)
-print(time.strftime("%H:%M:%S", time.localtime(time.time())), 'click the second input box')
-driver.find_element("xpath", "/html/body/div[4]/div/div/div/div[2]/div/div[2]/div[2]/input").click() #click the input box
-time.sleep(10)
-driver.find_element("xpath", "/html/body/div[4]/div/div/div/div[3]/button/span").click() #click the accept button
-time.sleep(10)                           #/html/body/div[4]/div/div/div/div[3]/button/span
-driver.find_element("xpath", "/html/body/div[7]/div/div/div/div[2]/div/div/input").send_keys('61eth')
-time.sleep(2)
-driver.find_element("xpath", "/html/body/div[7]/div/div/div/div[2]/div/div/button").click()
-time.sleep(6)
-# 定位目标元素
-driver.find_element("xpath", "//*[@id='root']/div[1]/div[2]/div/div[2]/button").click()
 time.sleep(6)
 print(time.strftime("%H:%M:%S", time.localtime(time.time())), '选蛋')
 window_handles = driver.window_handles
-# 切换到新窗口
-# 前面的导入语句保持不变...
-
-def get_element_center_coordinates(driver, element):
-    """获取元素的中心坐标"""
-    size = element.size
-    location = element.location
-    center_x = location['x'] + (size['width'] / 2)
-    center_y = location['y'] + (size['height'] / 2)
-    return center_x, center_y
-
-# ... (之前的代码保持不变，直到 unity-canvas 交互部分) ...
 
 # 切换到游戏窗口
 window_handles = driver.window_handles
@@ -199,7 +86,7 @@ time.sleep(16)  # 等待游戏加载
 click_skip(driver, 10)
 
 #下面开始多次循环找图做任务，直到完成500个点数的任务
-for i in range(1, 4):
+for i in range(1, 3):
     try:  # 循环找图，直到找到目标并点击成功
         #选择龙蛋点击
         unity_canvas = driver.find_element("xpath", "//*[@id='unity-canvas']")
