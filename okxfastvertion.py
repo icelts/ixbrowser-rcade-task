@@ -73,7 +73,7 @@ print("第二个标签页,start to setup wallet:", driver.title)
 time.sleep(3)
 
 #import the wallet
-import_wallet(driver,'0x0189deb0b34a2cd2842483c7835a94be34520c01891eb9b24a125ba420452fdd')
+import_wallet(driver,'0xbeeab0b518d1ff5072b5bd51d3ae5b3d63c1f97270d78423a3f5e1a9386055b6')
 
 time.sleep(6)
 print(time.strftime("%H:%M:%S", time.localtime(time.time())), '选蛋')
@@ -157,3 +157,8 @@ for i in range(1, 3):
         print(f"发生错误: {e}")
 #所有宠物都设置为休息状态
 rest_all_pets(driver)
+
+#关闭浏览器
+driver.quit()
+print("任务完成，浏览器已关闭")
+c.close_profile(result)
