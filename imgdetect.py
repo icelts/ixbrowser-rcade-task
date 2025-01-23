@@ -272,6 +272,14 @@ def setup_pet(driver):
                                 template_paths = {
                                     r"C:\Users\a2720\PycharmProjects\ixbrowser-local-api-python\imgs\play.bmp"}
                                 found = find_and_click_eggs(driver, unity_canvas, template_paths)
+                                if found:
+                                    unity_canvas = driver.find_element("xpath", "//*[@id='unity-canvas']")
+                                    template_paths = {
+                                        r"C:\Users\a2720\PycharmProjects\ixbrowser-local-api-python\imgs\full.bmp"}
+                                    found, coordinates = capture_and_find_egg(driver, unity_canvas, template_paths,
+                                                                              threshold=0.8)
+                                    if found:
+                                        break
                                 time.sleep(10)
                             for i in range(1, 3):
                                 unity_canvas = driver.find_element("xpath", "//*[@id='unity-canvas']")
