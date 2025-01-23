@@ -99,7 +99,7 @@ driver.find_element("xpath", "//*[@id='app']/div/div/div/div[3]/div/div[1]/div[2
 time.sleep(2)                           #
 driver.find_element("xpath", "//*[@id='app']/div/div[1]/div/div[2]/div/div[1]/div/div[2]/div/div[2]").click() #click the privte key button
 time.sleep(2)
-driver.find_element("xpath", "//*[@id='app']/div/div[1]/div/div[2]/div/div[2]/div/div/form/div[2]/div/textarea").send_keys('0xcd81f5478da365d19dae6f3066983df7cfec36114be1d727013641f671412f65')
+driver.find_element("xpath", "//*[@id='app']/div/div[1]/div/div[2]/div/div[2]/div/div/form/div[2]/div/textarea").send_keys('0x3111a13425b21ad87f9ca389b404ab9040b7abafe7ff277077c3e104bd568ea5')
 time.sleep(6)
 time.sleep(2)
 driver.find_element("xpath", "//*[@id='app']/div/div[2]/div/button").click() #click the confirm button
@@ -199,7 +199,7 @@ time.sleep(16)  # 等待游戏加载
 click_skip(driver, 10)
 
 #下面开始多次循环找图做任务，直到完成500个点数的任务
-for i in range(1, 20):
+for i in range(1, 5):
     try:  # 循环找图，直到找到目标并点击成功
         #选择龙蛋点击
         unity_canvas = driver.find_element("xpath", "//*[@id='unity-canvas']")

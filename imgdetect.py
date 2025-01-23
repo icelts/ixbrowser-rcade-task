@@ -251,7 +251,7 @@ def setup_pet(driver):
             unity_canvas = driver.find_element("xpath", "//*[@id='unity-canvas']")  # 如果商店
             template_paths = {r"C:\Users\a2720\PycharmProjects\ixbrowser-local-api-python\imgs\next.bmp"}
             found = find_and_click_eggs(driver, unity_canvas, template_paths)
-            if not found:
+            if found:
                 print(f"进到下一页，开始找空位")
                 unity_canvas = driver.find_element("xpath", "//*[@id='unity-canvas']")  # 如果商店
                 template_paths = {r"C:\Users\a2720\PycharmProjects\ixbrowser-local-api-python\imgs\vacant.bmp"}
@@ -363,3 +363,17 @@ def grab_shop(driver):
     found = find_and_click_eggs(driver, unity_canvas, template_paths)
     if found:
         print(f"找到close,关闭商店界面")
+
+
+#所有宠物设置休眠
+def rest_all_pets(driver):
+    for i in range(0, 5):
+        unity_canvas = driver.find_element("xpath", "//*[@id='unity-canvas']")
+        template_paths = {r"C:\Users\a2720\PycharmProjects\ixbrowser-local-api-python\imgs\next.bmp"}
+        found = find_and_click_eggs(driver, unity_canvas, template_paths)
+        if found:
+            unity_canvas = driver.find_element("xpath", "//*[@id='unity-canvas']")
+            template_paths = {r"C:\Users\a2720\PycharmProjects\ixbrowser-local-api-python\imgs\rest.bmp"}
+            found = find_and_click_eggs(driver, unity_canvas, template_paths)
+            if found:
+                print(f"成功设置第{i}只宠物休眠")
