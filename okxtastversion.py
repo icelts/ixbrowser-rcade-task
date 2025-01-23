@@ -8,7 +8,7 @@ from selenium.webdriver import Chrome
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.action_chains import ActionChains
-from imgdetect import grab_shop ,feed_pets,click_skip,find_and_click_eggs,setup_pet
+from imgdetect import grab_shop ,feed_pets,click_skip,find_and_click_eggs,setup_pet,rest_all_pets
 
 
 c = IXBrowserClient()
@@ -99,7 +99,7 @@ driver.find_element("xpath", "//*[@id='app']/div/div/div/div[3]/div/div[1]/div[2
 time.sleep(2)                           #
 driver.find_element("xpath", "//*[@id='app']/div/div[1]/div/div[2]/div/div[1]/div/div[2]/div/div[2]").click() #click the privte key button
 time.sleep(2)
-driver.find_element("xpath", "//*[@id='app']/div/div[1]/div/div[2]/div/div[2]/div/div/form/div[2]/div/textarea").send_keys('0x3111a13425b21ad87f9ca389b404ab9040b7abafe7ff277077c3e104bd568ea5')
+driver.find_element("xpath", "//*[@id='app']/div/div[1]/div/div[2]/div/div[2]/div/div/form/div[2]/div/textarea").send_keys('0xb49e5bb739b14ed564d6f310c6e10adc5825220f970c41582232c7bc0ff33e60')
 time.sleep(6)
 time.sleep(2)
 driver.find_element("xpath", "//*[@id='app']/div/div[2]/div/button").click() #click the confirm button
@@ -199,7 +199,7 @@ time.sleep(16)  # 等待游戏加载
 click_skip(driver, 10)
 
 #下面开始多次循环找图做任务，直到完成500个点数的任务
-for i in range(1, 5):
+for i in range(1, 4):
     try:  # 循环找图，直到找到目标并点击成功
         #选择龙蛋点击
         unity_canvas = driver.find_element("xpath", "//*[@id='unity-canvas']")
@@ -268,4 +268,5 @@ for i in range(1, 5):
                 print(f"未能成功点击目标:rest.bmp")
     except Exception as e:
         print(f"发生错误: {e}")
-
+#所有宠物都设置为休息状态
+rest_all_pets(driver)
