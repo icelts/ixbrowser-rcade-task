@@ -3,60 +3,65 @@ import time
 import threading
 import queue
 import csv
+import traceback
 from concurrent.futures import ThreadPoolExecutor
 
 import sys
 
 sys.path.insert(0, sys.path[0] + "/../")
-from ixbrowser_local_api import IXBrowserClient, Profile, Proxy, Preference, Fingerprint, Consts
+from ixbrowser_local_api import IXBrowserClient, Consts
 from selenium.webdriver import Chrome
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service
 
-# Import your existing game interaction functions
 from imgdetect import (
     grab_shop, feed_pets, click_skip, find_and_click_eggs,
-    setup_pet, rest_all_pets, import_wallet, capture_and_find_egg
+    setup_pet, rest_all_pets, import_wallet, capture_and_find_egg, import_wallet_2
 )
 
 
 def read_wallet_keys(filepath):
-    """
-    Read wallet private keys from a CSV-like file.
-    Expects format: data1,data2,private_key
-    """
-    private_keys = []
+    """Read wallet keys from file"""
+    keys_data = []
     with open(filepath, 'r') as file:
         for line in file:
-            parts = line.strip().split(',')
-            if len(parts) >= 3:
-                private_keys.append(parts[2])
-    return private_keys
+            keys_data.append(line.strip())
+    return keys_data
 
 
-def run_game_automation(private_key, profile_id, task_queue):
-    """
-    Run game automation for a single profile
-    """
+def log_failed_key(key_data, error_msg=''):
+    """Log failed key data to a file"""
+    with open('failed_keys.txt', 'a') as f:
+        f.write(f"{key_data},{error_msg}\n")
+
+
+def run_game_automation(key_data, profile_id, task_queue):
+    """Run game automation for a single profile"""
     c = IXBrowserClient()
     c.show_request_log = True
-
-    name = f'rcade_{int(time.time())}_{hash(private_key)}'
-    site_id = Consts.DEFAULT_SITE_ID_BLANK_PAGE
-
-    # Create profile
-    result = c.create_profile_by_copying(profile_id, name, site_id=site_id)
-    if result is None:
-        print(f"Profile creation failed: {c.message}")
-        return
-
-    # Open profile
-    open_result = c.open_profile(result, cookies_backup=False, load_profile_info_page=False)
-    if open_result is None:
-        print(f"Profile open failed: {c.message}")
-        return
+    driver = None
+    result = None
 
     try:
+        parts = key_data.split(',')
+        private_key = parts[2] if len(parts) >= 3 else None
+
+        if not private_key:
+            raise ValueError("Invalid key data format")
+
+        name = f'rcade_{int(time.time())}_{hash(private_key)}'
+        site_id = Consts.DEFAULT_SITE_ID_BLANK_PAGE
+
+        # Create profile
+        result = c.create_profile_by_copying(profile_id, name, site_id=site_id)
+        if result is None:
+            raise Exception(f"Profile creation failed: {c.message}")
+
+        # Open profile
+        open_result = c.open_profile(result, cookies_backup=False, load_profile_info_page=False)
+        if open_result is None:
+            raise Exception(f"Profile open failed: {c.message}")
+
         # Setup Selenium WebDriver
         web_driver_path = open_result['webdriver']
         debugging_address = open_result['debugging_address']
@@ -64,23 +69,24 @@ def run_game_automation(private_key, profile_id, task_queue):
         chrome_options.add_experimental_option("debuggerAddress", debugging_address)
         driver = Chrome(service=Service(web_driver_path), options=chrome_options)
 
-        # Navigate to game
+        # Navigate to game and perform automation
         driver.get("https://hatchlings.revolvinggames.com/?cache=false")
         time.sleep(15)
         window_handles = driver.window_handles
         driver.switch_to.window(window_handles[-1])
 
         # Import wallet
-        import_wallet(driver, private_key)
+        import_wallet_2(driver, private_key)
         time.sleep(6)
 
         # Game automation logic (similar to original script)
         window_handles = driver.window_handles
         driver.switch_to.window(window_handles[-1])
         time.sleep(16)
-        click_skip(driver, 13)
+        click_skip(driver, 20)
 
-        # Perform game tasks (your existing logic)
+        # [Rest of the original game automation logic]
+        # ... (copy the entire game automation block from the previous script)
         # 下面开始多次循环找图做任务，直到完成500个点数的任务
         for i in range(1, 2):
             try:  # 循环找图，直到找到目标并点击成功
@@ -149,43 +155,43 @@ def run_game_automation(private_key, profile_id, task_queue):
 
             except Exception as e:
                 print(f"发生错误: {e}")
-
         # Rest all pets and cleanup
         rest_all_pets(driver)
-        driver.quit()
-        c.close_profile(result)
+        return True
 
     except Exception as e:
         print(f"Automation error for key {private_key}: {e}")
+        log_failed_key(key_data, str(e))
+        traceback.print_exc()
+        return False
+
+    finally:
+        # Ensure cleanup happens regardless of success or failure
+        try:
+            if driver:
+                driver.quit()
+            if result and c:
+                c.close_profile(result)
+        except Exception as cleanup_error:
+            print(f"Cleanup error: {cleanup_error}")
 
 
 def main(keys_file, profile_id, num_threads):
-    """
-    Main function to run multi-threaded game automation
-    """
+    """Run multi-threaded game automation"""
     # Read private keys
     private_keys = read_wallet_keys(keys_file)
 
-    # Create a thread-safe queue for tasks if needed
-    task_queue = queue.Queue()
-
     # Use ThreadPoolExecutor for managing threads
     with ThreadPoolExecutor(max_workers=num_threads) as executor:
-        # Submit tasks for each private key
-        futures = [
-            executor.submit(run_game_automation, key, profile_id, task_queue)
-            for key in private_keys
-        ]
-
-        # Wait for all tasks to complete
-        for future in futures:
-            future.result()
+        # Submit tasks for each private key with a delay
+        for key in private_keys:
+            executor.submit(run_game_automation, key, profile_id, None)
+            time.sleep(10)  # 3-second delay between thread starts
 
 
 if __name__ == "__main__":
-    # Example usage
-    KEYS_FILE = 'private_keys.txt'  # Path to your keys file
-    BASE_PROFILE_ID = 49  # Your base profile ID to copy
-    NUM_THREADS = 5  # Number of concurrent threads
+    KEYS_FILE = 'private_keys.txt'
+    BASE_PROFILE_ID = 49
+    NUM_THREADS = 5
 
     main(KEYS_FILE, BASE_PROFILE_ID, NUM_THREADS)

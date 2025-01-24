@@ -1,9 +1,15 @@
+from telnetlib import EC
+
 import cv2
 import numpy as np
 from PIL import Image
 import io
 import sys
 import time
+
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.wait import WebDriverWait
+
 sys.path.insert(0, sys.path[0]+"/../")
 from selenium.webdriver.common.action_chains import ActionChains
 
@@ -514,3 +520,160 @@ def get_element_center_coordinates(driver, element):
     center_x = location['x'] + (size['width'] / 2)
     center_y = location['y'] + (size['height'] / 2)
     return center_x, center_y
+
+
+from selenium.webdriver.common.by import By
+from selenium.webdriver.common.action_chains import ActionChains
+import time
+
+def safe_click(driver, xpath, description=""):
+    """
+    安全点击元素，如果找不到元素则跳过
+    :param driver: WebDriver 实例
+    :param xpath: 元素的 XPath
+    :param description: 操作描述（用于日志）
+    """
+    try:
+        element = driver.find_element(By.XPATH, xpath)
+        element.click()
+        print(f"{description} 点击成功")
+    except Exception as e:
+        print(f"{description} 未找到元素，跳过点击操作")
+
+def import_wallet_2(driver, wallet_address):
+    # 遍历每个窗口句柄
+    window_handles = driver.window_handles
+    for handle in window_handles:
+        driver.switch_to.window(handle)
+        title = driver.title
+        print(f"Window Handle: {handle}, Title: {title}")
+
+        # 如果标题是 "OKX Wallet"，则在该窗口中打开指定页面
+        if title == "OKX Wallet":
+            print("Found OKX Wallet window. Opening the extension page...")
+            driver.get("chrome-extension://gniabnkpabeeokgnkcfnlbgdnngddeeb/notification.html#/initialize")
+            break  # 退出循环
+
+    # 如果没有找到标题为 "OKX Wallet" 的窗口
+    else:
+        print("No window with title 'OKX Wallet' found.")
+
+    time.sleep(3)
+    safe_click(driver, "//*[@id='app']/div/div/div/div[3]/div/div[2]/button/span", "导入按钮")
+    time.sleep(2)
+
+    safe_click(driver, "//*[@id='app']/div/div/div/div[3]/div/div[1]/div[2]/div", "创建按钮")
+    time.sleep(2)
+
+    safe_click(driver, "//*[@id='app']/div/div[1]/div/div[2]/div/div[1]/div/div[2]/div/div[2]", "私钥按钮")
+    time.sleep(2)
+
+    try:
+        driver.find_element(By.XPATH, "//*[@id='app']/div/div[1]/div/div[2]/div/div[2]/div/div/form/div[2]/div/textarea").send_keys(wallet_address)
+        print("钱包地址输入成功")
+    except Exception as e:
+        print("钱包地址输入失败，跳过")
+
+    time.sleep(6)
+    safe_click(driver, "//*[@id='app']/div/div[2]/div/button", "确认按钮")
+    time.sleep(3)
+
+    safe_click(driver, "//*[@id='app']/div/div/div/div[2]/div/div[2]/div/div[2]/div[2]/div[2]/button/span", "再次确认按钮")
+    time.sleep(3)
+
+    safe_click(driver, "//*[@id='app']/div/div/div/div[2]/div[3]/div[2]/div/div[1]", "选择密码")
+    time.sleep(6)
+
+    safe_click(driver, "//*[@id='app']/div/div/div/div[2]/div[5]/div/button", "不推荐按钮")
+    time.sleep(6)
+
+    try:
+        driver.find_element(By.XPATH, "//*[@id='app']/div/div[1]/div/div[2]/form/div[1]/div[2]/div/div/div/div/input").send_keys('Aa2006123!!')
+        print("密码输入成功")
+    except Exception as e:
+        print("密码输入失败，跳过")
+
+    try:
+        driver.find_element(By.XPATH, "//*[@id='app']/div/div[1]/div/div[2]/form/div[3]/div[2]/div/div/div/div/input").send_keys('Aa2006123!!')
+        print("确认密码输入成功")
+    except Exception as e:
+        print("确认密码输入失败，跳过")
+
+    time.sleep(10)
+    safe_click(driver, "//*[@id='app']/div/div[2]/div/button", "最终确认按钮")
+    time.sleep(25)
+
+    driver.close()
+    time.sleep(3)
+    driver.switch_to.window(window_handles[0])  # 切换到第1个标签页
+
+    time.sleep(3)
+    driver.refresh()
+    time.sleep(10)
+    safe_click(driver, "//*[@id='root']/div[1]/div[2]/div/button/span", "播放按钮")
+    time.sleep(3)
+
+    safe_click(driver, "//*[@id='link-wallet-tooltip']/span", "链接钱包按钮")
+    time.sleep(5)
+
+    actions = ActionChains(driver)
+    print(time.strftime("%H:%M:%S", time.localtime(time.time())), '点击 OKX 钱包按钮')
+    actions.move_by_offset(606, 411).click().perform()  # 点击 OKX 钱包按钮
+    time.sleep(3)
+
+    print(time.strftime("%H:%M:%S", time.localtime(time.time())), '切换到钱包窗口')
+    window_handles = driver.window_handles
+    driver.switch_to.window(window_handles[-1])
+    time.sleep(3)
+
+    print(time.strftime("%H:%M:%S", time.localtime(time.time())), '点击连接按钮')
+    safe_click(driver, "//*[@id='app']/div/div/div/div/div[5]/div[2]/button[2]/span/div", "连接按钮")
+    time.sleep(3)
+
+    print(time.strftime("%H:%M:%S", time.localtime(time.time())), '切换到第一个窗口')
+    driver.switch_to.window(window_handles[0])
+    time.sleep(3)
+
+    print(time.strftime("%H:%M:%S", time.localtime(time.time())), '点击 Arbitrum One 按钮')
+    actions.move_by_offset(606, 187).click().perform()  # 点击 Arbitrum One 按钮
+    time.sleep(6)
+
+    safe_click(driver, "//*[@id='link-wallet-tooltip']/span", "链接钱包按钮")
+    time.sleep(6)
+
+    window_handles = driver.window_handles
+    driver.switch_to.window(window_handles[-1])
+    time.sleep(3)
+
+    print(time.strftime("%H:%M:%S", time.localtime(time.time())), '点击确认按钮')
+    safe_click(driver, "//*[@id='app']/div/div/div/div/div/div[4]/div/button[2]/span", "确认按钮")
+    time.sleep(6)
+
+    driver.switch_to.window(window_handles[0])
+    time.sleep(3)
+
+    print(time.strftime("%H:%M:%S", time.localtime(time.time())), '点击关闭按钮')
+    safe_click(driver, "/html/body/div[5]/div/div/div/div[1]/button", "关闭按钮")
+    time.sleep(3)
+
+    print(time.strftime("%H:%M:%S", time.localtime(time.time())), '点击第一个输入框')
+    safe_click(driver, "/html/body/div[4]/div/div/div/div[2]/div/div[2]/div[1]/input", "第一个输入框")
+    time.sleep(3)
+
+    print(time.strftime("%H:%M:%S", time.localtime(time.time())), '点击第二个输入框')
+    safe_click(driver, "/html/body/div[4]/div/div/div/div[2]/div/div[2]/div[2]/input", "第二个输入框")
+    time.sleep(10)
+
+    safe_click(driver, "/html/body/div[4]/div/div/div/div[3]/button/span", "接受按钮")
+    time.sleep(10)
+
+    try:
+        driver.find_element(By.XPATH, "/html/body/div[7]/div/div/div/div[2]/div/div/input").send_keys('61eth')
+        print("输入 61eth 成功")
+    except Exception as e:
+        print("输入 61eth 失败，跳过")
+
+    safe_click(driver, "/html/body/div[7]/div/div/div/div[2]/div/div/button", "确认按钮")
+    time.sleep(6)
+
+    safe_click(driver, "//*[@id='root']/div[1]/div[2]/div/div[2]/button", "目标元素")
