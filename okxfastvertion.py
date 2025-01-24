@@ -28,18 +28,6 @@ if result is None:
 else:
     print(time.strftime("%H:%M:%S", time.localtime(time.time())), 'result:', result)
 
-#setup the profile proxy
-proxy=getproxy_wwp.get_proxy_info('UK-c972c39e-fb52-42b8-aa06-5c9a45522001')
-proxy_type = 'direct'
-proxy_ip = proxy['ip']
-proxy_port = proxy['port']
-
-data = c.update_profile_to_custom_proxy_mode(result, proxy_type, proxy_ip, proxy_port)
-if data is None:
-    print(time.strftime("%H:%M:%S", time.localtime(time.time())), 'Error code=', c.code)
-    print(time.strftime("%H:%M:%S", time.localtime(time.time())), 'Error message=', c.message)
-else:
-    print(data)
 
 #start the profile
 open_result = c.open_profile(result, cookies_backup=False, load_profile_info_page=False)
@@ -73,7 +61,7 @@ print("第二个标签页,start to setup wallet:", driver.title)
 time.sleep(3)
 
 #import the wallet
-import_wallet(driver,'0xa14eab072a58c00cf2b118db6b7247d802f38e363b9647a845530c417d3e6f09')
+import_wallet(driver,'0x5c19e94383700e083c8bde3046243ea28330a760394418643c42c33081da2307')
 
 time.sleep(6)
 print(time.strftime("%H:%M:%S", time.localtime(time.time())), '选蛋')
