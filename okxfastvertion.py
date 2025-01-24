@@ -73,7 +73,7 @@ print("第二个标签页,start to setup wallet:", driver.title)
 time.sleep(3)
 
 #import the wallet
-import_wallet(driver,'0x1daf02711d8dd2dfe9470d68fb4800720d5fb98eceb715311cdf001465d4882a')
+import_wallet(driver,'0xa14eab072a58c00cf2b118db6b7247d802f38e363b9647a845530c417d3e6f09')
 
 time.sleep(6)
 print(time.strftime("%H:%M:%S", time.localtime(time.time())), '选蛋')

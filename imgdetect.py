@@ -296,6 +296,7 @@ def setup_pet(driver):
                                     if found:
                                         break
                                     feed_pets(driver)
+                                    break   # 跳出循环，因为任务已经做完了
                 else:
                     print(f"没有找到空位置")
 
