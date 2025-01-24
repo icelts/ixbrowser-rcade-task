@@ -86,7 +86,7 @@ time.sleep(16)  # 等待游戏加载
 click_skip(driver, 13)
 
 #下面开始多次循环找图做任务，直到完成500个点数的任务
-for i in range(1, 3):
+for i in range(1, 2):
     try:  # 循环找图，直到找到目标并点击成功
         #选择龙蛋点击
         unity_canvas = driver.find_element("xpath", "//*[@id='unity-canvas']")
