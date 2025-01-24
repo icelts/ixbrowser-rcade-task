@@ -288,6 +288,13 @@ def setup_pet(driver):
                                 found = find_and_click_eggs(driver, unity_canvas, template_paths)
                                 if found:
                                     print(f"成功点击目标:feed.bmp，开始喂食")
+                                    unity_canvas = driver.find_element("xpath", "//*[@id='unity-canvas']")
+                                    template_paths = {
+                                        r"C:\Users\a2720\PycharmProjects\ixbrowser-local-api-python\imgs\full2.bmp"}
+                                    found, coordinates = capture_and_find_egg(driver, unity_canvas, template_paths,
+                                                                              threshold=0.8)
+                                    if found:
+                                        break
                                     feed_pets(driver)
                 else:
                     print(f"没有找到空位置")

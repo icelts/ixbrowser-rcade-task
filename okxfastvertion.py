@@ -73,7 +73,7 @@ print("第二个标签页,start to setup wallet:", driver.title)
 time.sleep(3)
 
 #import the wallet
-import_wallet(driver,'0xad1dc15b6242aa1ce7f4f0ac05a960d132eb65dc9e408efc9bb26bba070f4e0d')
+import_wallet(driver,'0x1daf02711d8dd2dfe9470d68fb4800720d5fb98eceb715311cdf001465d4882a')
 
 time.sleep(6)
 print(time.strftime("%H:%M:%S", time.localtime(time.time())), '选蛋')
@@ -148,17 +148,9 @@ for i in range(1, 3):
         template_paths = {r"C:\Users\a2720\PycharmProjects\ixbrowser-local-api-python\imgs\next.bmp"}
         found = find_and_click_eggs(driver, unity_canvas, template_paths)
         if found:
-            print(f"找到目标，坐标: next.bmp,进入下一个宠物界面")
-        else:
-            #没有任务，宠物开始休息
-            print(f"未能成功点击目标:play.bmp，开始寻找休息信息")
-            unity_canvas = driver.find_element("xpath", "//*[@id='unity-canvas']")
-            template_paths={r"C:\Users\a2720\PycharmProjects\ixbrowser-local-api-python\imgs\rest.bmp"}
-            found = find_and_click_eggs(driver, unity_canvas, template_paths)
-            if found:
-                print(f"找到目标，坐标: rest.bmp")
-            else:
-                print(f"未能成功点击目标:rest.bmp")
+            print(f"找到目标，坐标: next.bmp,进入下一个宠物界面,进入下一个任务循环")
+            time.sleep(5)
+
     except Exception as e:
         print(f"发生错误: {e}")
 #所有宠物都设置为休息状态

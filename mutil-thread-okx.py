@@ -100,7 +100,10 @@ class GameAutomationTask:
             # Import wallet
             import_wallet(driver, self.private_key)
             time.sleep(6)
-
+            window_handles = driver.window_handles
+            driver.switch_to.window(window_handles[-1])
+            time.sleep(16)  # 等待游戏加载
+            click_skip(driver, 13)
             # Run game automation
             self._run_game_loop(driver)
 
@@ -116,20 +119,81 @@ class GameAutomationTask:
 
     def _run_game_loop(self, driver):
         """Implement the game loop from the original script"""
-        for i in range(1, 3):
-            try:
-                # Original game automation logic goes here
-                # This is a placeholder - you'll need to copy the entire loop from the original script
-                # All the find_and_click_eggs, feed_pets, etc. logic should be here
+
+        try:  # 循环找图，直到找到目标并点击成功
+            # 选择龙蛋点击
+            unity_canvas = driver.find_element("xpath", "//*[@id='unity-canvas']")
+            template_paths = {r"C:\Users\a2720\PycharmProjects\ixbrowser-local-api-python\imgs\egg.bmp"}
+            found = find_and_click_eggs(driver, unity_canvas, template_paths)
+            if found:
                 unity_canvas = driver.find_element("xpath", "//*[@id='unity-canvas']")
-                template_paths = {r"C:\Users\a2720\PycharmProjects\ixbrowser-local-api-python\imgs\egg.bmp"}
+                template_paths = {r"C:\Users\a2720\PycharmProjects\ixbrowser-local-api-python\imgs\hatch.bmp"}
                 found = find_and_click_eggs(driver, unity_canvas, template_paths)
+                if found:
+                    time.sleep(5)
+                    click_skip(driver, 20)  # 连续点击20次才会进入交互界面
+                else:
+                    print(f"未能成功点击目标:hatch.bmp")
+            else:
+                print(f"未能成功点击目标:egg.bmp")
 
-                # Add more game automation steps here...
+            # 所有的动作从play开始，如果找不到就让宠物休息，找到以后依次play,喂养，shop领取，egg激活，玩具放置，然后点击下一个页面进去喂养
+            for i in range(1, 10):
+                unity_canvas = driver.find_element("xpath", "//*[@id='unity-canvas']")  # 直接play6次
+                template_paths = {r"C:\Users\a2720\PycharmProjects\ixbrowser-local-api-python\imgs\play.bmp"}
+                found = find_and_click_eggs(driver, unity_canvas, template_paths)
+                if found:
+                    unity_canvas = driver.find_element("xpath", "//*[@id='unity-canvas']")
+                    template_paths = {r"C:\Users\a2720\PycharmProjects\ixbrowser-local-api-python\imgs\full.bmp"}
+                    found, coordinates = capture_and_find_egg(driver, unity_canvas, template_paths, threshold=0.8)
+                    if found:
+                        break
+                time.sleep(10)
+            ## 开始清洗
+            unity_canvas = driver.find_element("xpath", "//*[@id='unity-canvas']")
+            template_paths = {r"C:\Users\a2720\PycharmProjects\ixbrowser-local-api-python\imgs\clean.bmp"}
+            found = find_and_click_eggs(driver, unity_canvas, template_paths)
+            ## 开始投喂
+            for i in range(1, 3):
+                unity_canvas = driver.find_element("xpath", "//*[@id='unity-canvas']")
+                template_paths = {r"C:\Users\a2720\PycharmProjects\ixbrowser-local-api-python\imgs\feed.bmp"}
+                found = find_and_click_eggs(driver, unity_canvas, template_paths)
+                if found:
+                    print(f"成功点击目标:feed.bmp，开始喂食")
+                    feed_pets(driver)
+            # 检测商店物品，全部收取
+            unity_canvas = driver.find_element("xpath", "//*[@id='unity-canvas']")  # 如果商店
+            template_paths = {r"C:\Users\a2720\PycharmProjects\ixbrowser-local-api-python\imgs\shop.bmp"}
+            found = find_and_click_eggs(driver, unity_canvas, template_paths)
+            if found:
+                # 收取奖品
+                grab_shop(driver)
+            # 检测龙蛋页面，有蛋就激活，并直接释放宠物，如果当前页面有宠物就切换到下一个页面
+            unity_canvas = driver.find_element("xpath", "//*[@id='unity-canvas']")  # 如果商店
+            template_paths = {r"C:\Users\a2720\PycharmProjects\ixbrowser-local-api-python\imgs\longdanjihuo.bmp"}
+            found = find_and_click_eggs(driver, unity_canvas, template_paths)
+            if found:
+                print(f"打开龙蛋界面,开始激活龙蛋")
+                setup_pet(driver)
 
-            except Exception as e:
-                self.logger.error(f"Error in game loop: {e}")
-                break
+            # 所有任务完成以后点击图标进入下一个页面
+            unity_canvas = driver.find_element("xpath", "//*[@id='unity-canvas']")  # 进入下一个宠物界面
+            template_paths = {r"C:\Users\a2720\PycharmProjects\ixbrowser-local-api-python\imgs\next.bmp"}
+            found = find_and_click_eggs(driver, unity_canvas, template_paths)
+            if found:
+                print(f"找到目标，坐标: next.bmp,进入下一个宠物界面")
+            else:
+                # 没有任务，宠物开始休息
+                print(f"未能成功点击目标:play.bmp，开始寻找休息信息")
+                unity_canvas = driver.find_element("xpath", "//*[@id='unity-canvas']")
+                template_paths = {r"C:\Users\a2720\PycharmProjects\ixbrowser-local-api-python\imgs\rest.bmp"}
+                found = find_and_click_eggs(driver, unity_canvas, template_paths)
+                if found:
+                    print(f"找到目标，坐标: rest.bmp")
+                else:
+                    print(f"未能成功点击目标:rest.bmp")
+        except Exception as e:
+            print(f"发生错误: {e}")
 
         # Rest all pets at the end
         rest_all_pets(driver)
@@ -171,7 +235,7 @@ class AutomationManager:
         """Load proxy information"""
         # You'll need to modify this based on your proxy loading mechanism
         # This is a placeholder that uses getproxy_wwp
-        return [getproxy_wwp.get_proxy_info(f'UK-proxy-{i}') for i in range(len(self.private_keys))]
+        #return [getproxy_wwp.get_proxy_info(f'UK-proxy-{i}') for i in range(len(self.private_keys))]
 
     def prepare_tasks(self):
         """Prepare tasks for threading"""
@@ -203,7 +267,7 @@ def main():
     Path('private_keys.txt').touch(exist_ok=True)
 
     # Number of threads to run simultaneously
-    NUM_THREADS = 3  # Adjust this number based on your needs and system capabilities
+    NUM_THREADS = 5  # Adjust this number based on your needs and system capabilities
 
     manager = AutomationManager(NUM_THREADS)
     manager.start()
