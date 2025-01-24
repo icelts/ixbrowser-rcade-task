@@ -90,6 +90,13 @@ def run_game_automation(key_data, profile_id, task_queue):
         # 下面开始多次循环找图做任务，直到完成500个点数的任务
         for i in range(1, 2):
             try:  # 循环找图，直到找到目标并点击成功
+                unity_canvas = driver.find_element("xpath", "//*[@id='unity-canvas']")
+                template_paths = {r"C:\Users\a2720\PycharmProjects\ixbrowser-local-api-python\imgs\wallet.bmp"}
+                found, coordinates = capture_and_find_egg(driver, unity_canvas, template_paths,threshold=0.8)
+                if  found:     #钱包没有导入成功
+                    driver.quit()
+                    c.close_profile(result)
+                    return
                 # 选择龙蛋点击
                 unity_canvas = driver.find_element("xpath", "//*[@id='unity-canvas']")
                 template_paths = {r"C:\Users\a2720\PycharmProjects\ixbrowser-local-api-python\imgs\egg.bmp"}
@@ -186,12 +193,12 @@ def main(keys_file, profile_id, num_threads):
         # Submit tasks for each private key with a delay
         for key in private_keys:
             executor.submit(run_game_automation, key, profile_id, None)
-            time.sleep(10)  # 3-second delay between thread starts
+            time.sleep(15)  # 3-second delay between thread starts
 
 
 if __name__ == "__main__":
     KEYS_FILE = 'private_keys.txt'
     BASE_PROFILE_ID = 49
-    NUM_THREADS = 5
+    NUM_THREADS = 10
 
     main(KEYS_FILE, BASE_PROFILE_ID, NUM_THREADS)
