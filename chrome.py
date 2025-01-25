@@ -1,15 +1,8 @@
 import sys
 import time
-import threading
-import queue
-import csv
 import traceback
 from concurrent.futures import ThreadPoolExecutor
 
-import sys
-
-sys.path.insert(0, sys.path[0] + "/../")
-from ixbrowser_local_api import IXBrowserClient, Consts
 from selenium.webdriver import Chrome
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service
@@ -35,12 +28,9 @@ def log_failed_key(key_data, error_msg=''):
         f.write(f"{key_data},{error_msg}\n")
 
 
-def run_game_automation(key_data, profile_id, task_queue):
+def run_game_automation(key_data, task_queue):
     """Run game automation for a single profile"""
-    c = IXBrowserClient()
-    c.show_request_log = True
     driver = None
-    result = None
 
     try:
         parts = key_data.split(',')
@@ -49,24 +39,29 @@ def run_game_automation(key_data, profile_id, task_queue):
         if not private_key:
             raise ValueError("Invalid key data format")
 
-        name = f'rcade_{int(time.time())}_{hash(private_key)}'
-        site_id = Consts.DEFAULT_SITE_ID_BLANK_PAGE
-
-        # Create profile
-        result = c.create_profile_by_copying(profile_id, name, site_id=site_id)
-        if result is None:
-            raise Exception(f"Profile creation failed: {c.message}")
-
-        # Open profile
-        open_result = c.open_profile(result, cookies_backup=False, load_profile_info_page=False)
-        if open_result is None:
-            raise Exception(f"Profile open failed: {c.message}")
-
-        # Setup Selenium WebDriver
-        web_driver_path = open_result['webdriver']
-        debugging_address = open_result['debugging_address']
+        # Setup Selenium WebDriver with proxy and extensions
         chrome_options = Options()
-        chrome_options.add_experimental_option("debuggerAddress", debugging_address)
+
+        # 1. 设置固定分辨率
+        chrome_options.add_argument("--window-size=1280,720")
+
+        # 2. 加载钱包插件（例如 MetaMask）
+        extension_path = r"C:\Users\a2720\Desktop\okx.crx"  # 替换为你的 MetaMask 插件路径
+        chrome_options.add_extension(extension_path)
+
+        # 3. 设置代理
+        #proxy = "http://ip.mproxy.vn:12318"  # 替换为你的代理地址和端口
+        #username = "cashbag"  # 替换为你的代理用户名
+        #password = "bfLMEm6kMlgZ34E"  # 替换为你的代理密码
+        #chrome_options.add_argument(f"--proxy-server={proxy}")
+
+        # 其他 Chrome 选项
+        chrome_options.add_argument("--disable-popup-blocking")  # 禁用弹出窗口拦截
+        chrome_options.add_argument("--disable-infobars")  # 禁用信息栏
+        chrome_options.add_argument("--disable-notifications")  # 禁用通知
+
+        # 设置 ChromeDriver 路径
+        web_driver_path = r"C:\Users\a2720\AppData\Roaming\ixBrowser-Resources\chrome\130-0003\chromedriver.exe"  # 替换为你的 ChromeDriver 路径
         driver = Chrome(service=Service(web_driver_path), options=chrome_options)
 
         # Navigate to game and perform automation
@@ -92,10 +87,9 @@ def run_game_automation(key_data, profile_id, task_queue):
             try:  # 循环找图，直到找到目标并点击成功
                 unity_canvas = driver.find_element("xpath", "//*[@id='unity-canvas']")
                 template_paths = {r"C:\Users\a2720\PycharmProjects\ixbrowser-local-api-python\imgs\wallet.bmp"}
-                found, coordinates = capture_and_find_egg(driver, unity_canvas, template_paths,threshold=0.8)
-                if  found:     #钱包没有导入成功
+                found, coordinates = capture_and_find_egg(driver, unity_canvas, template_paths, threshold=0.8)
+                if found:  # 钱包没有导入成功
                     driver.quit()
-                    c.close_profile(result)
                     return
                 # 选择龙蛋点击
                 unity_canvas = driver.find_element("xpath", "//*[@id='unity-canvas']")
@@ -177,13 +171,11 @@ def run_game_automation(key_data, profile_id, task_queue):
         try:
             if driver:
                 driver.quit()
-            if result and c:
-                c.close_profile(result)
         except Exception as cleanup_error:
             print(f"Cleanup error: {cleanup_error}")
 
 
-def main(keys_file, profile_id, num_threads):
+def main(keys_file, num_threads):
     """Run multi-threaded game automation"""
     # Read private keys
     private_keys = read_wallet_keys(keys_file)
@@ -192,13 +184,12 @@ def main(keys_file, profile_id, num_threads):
     with ThreadPoolExecutor(max_workers=num_threads) as executor:
         # Submit tasks for each private key with a delay
         for key in private_keys:
-            executor.submit(run_game_automation, key, profile_id, None)
+            executor.submit(run_game_automation, key, None)
             time.sleep(20)  # 3-second delay between thread starts
 
 
 if __name__ == "__main__":
     KEYS_FILE = 'private_keys.txt'
-    BASE_PROFILE_ID = 49
     NUM_THREADS = 5
 
-    main(KEYS_FILE, BASE_PROFILE_ID, NUM_THREADS)
+    main(KEYS_FILE, NUM_THREADS)

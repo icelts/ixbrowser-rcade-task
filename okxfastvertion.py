@@ -38,13 +38,16 @@ if open_result is None:
     sys.exit()
 # time.sleep(30)
 web_driver_path = open_result['webdriver']
+print(time.strftime("%H:%M:%S", time.localtime(time.time())), 'web_driver_path:', web_driver_path)
 debugging_address = open_result['debugging_address']
+print(time.strftime("%H:%M:%S", time.localtime(time.time())), 'debugging_address:', debugging_address)
 
 chrome_options = Options()
 chrome_options.add_experimental_option("debuggerAddress", debugging_address)
 
 # selenium 4 and above
 driver = Chrome(service=Service(web_driver_path), options=chrome_options)
+print( time.strftime("%H:%M:%S", time.localtime(time.time())), 'driver:', driver)
 
 print(time.strftime("%H:%M:%S", time.localtime(time.time())), 'Visit the ixBrowser homepage by default')
 driver.get("https://hatchlings.revolvinggames.com/?cache=false")
