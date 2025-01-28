@@ -9,7 +9,7 @@ from selenium.webdriver.chrome.service import Service
 
 from imgdetect import (
     grab_shop, feed_pets, click_skip, find_and_click_eggs,
-    setup_pet, rest_all_pets, import_wallet, capture_and_find_egg, import_wallet_3
+    setup_pet, rest_all_pets, import_wallet, capture_and_find_egg, import_wallet_3, safe_click
 )
 
 
@@ -78,24 +78,10 @@ def run_game_automation(key_data, task_queue):
         window_handles = driver.window_handles
         driver.switch_to.window(window_handles[-1])
         time.sleep(16)
+        safe_click(driver, "//*[@id='unity-fullscreen-button']", "打开全屏")
         #需要判断flash页面是否完全加载，才能连续点击，循环20次，每次等待6秒
-        for i in range(1, 20):
-            try:
-                unity_canvas = driver.find_element("xpath", "//*[@id='unity-canvas']")
-                template_paths = "imgs/loading.bmp"
-                found, coordinates = capture_and_find_egg(driver, unity_canvas, template_paths, threshold=0.8)
-                if found:
-                    print(f"发现目标:loading.bmp，等待6秒")
-                    time.sleep(6)
-                else:
-                    unity_canvas = driver.find_element("xpath", "//*[@id='unity-canvas']")
-                    template_paths = "imgs/needclick.bmp"
-                    found, coordinates = capture_and_find_egg(driver, unity_canvas, template_paths, threshold=0.8)
-                    if found:
-                        click_skip(driver, 20)
-                        break
-            except:
-                print('等待页面未发现错误')
+        time.sleep(6)
+        click_skip(driver, 20)
         print(f"进入游戏")
         # [Rest of the original game automation logic]
         # ... (copy the entire game automation block from the previous script)
@@ -109,7 +95,14 @@ def run_game_automation(key_data, task_queue):
                     print(f"钱包没有导入成功，结束当前任务线程")
                     driver.quit()
                     return
-                # 选择龙蛋点击
+                unity_canvas = driver.find_element("xpath", "//*[@id='unity-canvas']")
+                template_paths = "imgs/evolve.bmp"
+                found, coordinates = capture_and_find_egg(driver, unity_canvas, template_paths, threshold=0.8)
+                if found:  # 满级，需要付费升级宠物
+                    print(f"已经满级，需要付费升级宠物")
+                    driver.quit()
+                    return
+                # 游戏初始化，选择并激活宠物
                 unity_canvas = driver.find_element("xpath", "//*[@id='unity-canvas']")
                 template_paths = ["imgs/egg.bmp"]
                 found = find_and_click_eggs(driver, unity_canvas, template_paths)
@@ -157,6 +150,8 @@ def run_game_automation(key_data, task_queue):
                 if found:
                     # 收取奖品
                     grab_shop(driver)
+                else:
+                    print(f"没有找到目标:shop.bmp")
                 # 检测龙蛋页面，有蛋就激活，并直接释放宠物，如果当前页面有宠物就切换到下一个页面
                 unity_canvas = driver.find_element("xpath", "//*[@id='unity-canvas']")  # 如果商店
                 template_paths = ["imgs/longdanjihuo.bmp"]
@@ -164,6 +159,8 @@ def run_game_automation(key_data, task_queue):
                 if found:
                     print(f"打开龙蛋界面,开始激活龙蛋")
                     setup_pet(driver)
+                else:
+                    print(f"没有找到目标:longdanjihuo.bmp")
 
                 # 所有任务完成以后点击图标进入下一个页面
                 unity_canvas = driver.find_element("xpath", "//*[@id='unity-canvas']")  # 进入下一个宠物界面
@@ -209,6 +206,6 @@ def main(keys_file, num_threads):
 
 if __name__ == "__main__":
     KEYS_FILE = 'private_keys.txt'
-    NUM_THREADS = 1
+    NUM_THREADS = 12
 
     main(KEYS_FILE, NUM_THREADS)

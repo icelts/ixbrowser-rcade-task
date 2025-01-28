@@ -6,8 +6,12 @@ import os
 import cv2
 import threading
 import traceback
-sys.path.insert(0, sys.path[0]+"/../")
 
+from selenium.common import TimeoutException
+from selenium.webdriver.support.wait import WebDriverWait
+
+sys.path.insert(0, sys.path[0]+"/../")
+import logging
 # 全局锁（可选）
 opencv_io_lock = threading.Lock()
 
@@ -294,7 +298,7 @@ def setup_pet(driver):
 def grab_shop(driver):
     # 默认第一个是egg界面
     unity_canvas = driver.find_element("xpath", "//*[@id='unity-canvas']")  # 寻找食物，开始喂食
-    template_paths = ["imgs/free.bmp"]
+    template_paths = ["imgs/free.bmp","imgs/free2.bmp"]
     found = find_and_click_eggs(driver, unity_canvas, template_paths)
     if found:
         print(f"找到egg，已经领取egg")
@@ -310,7 +314,7 @@ def grab_shop(driver):
     if found:
         print(f"找到decorations")
         unity_canvas = driver.find_element("xpath", "//*[@id='unity-canvas']")  # 寻找领取免费物品按钮
-        template_paths = ["imgs/free.bmp"]
+        template_paths = ["imgs/free.bmp","imgs/free2.bmp"]
         found = find_and_click_eggs(driver, unity_canvas, template_paths)
         if found:
             print(f"成功领取decorations")
@@ -324,7 +328,7 @@ def grab_shop(driver):
     if found:
         print(f"找到habitat")
         unity_canvas = driver.find_element("xpath", "//*[@id='unity-canvas']")
-        template_paths = ["imgs/free.bmp"]
+        template_paths = ["imgs/free.bmp","imgs/free2.bmp"]
         found = find_and_click_eggs(driver, unity_canvas, template_paths)
         if found:
             print(f"成功领取habitat")
@@ -338,7 +342,7 @@ def grab_shop(driver):
     if found:
         print(f"找到food界面")
         unity_canvas = driver.find_element("xpath", "//*[@id='unity-canvas']")  # 寻找食物，开始喂食
-        template_paths = ["imgs/free.bmp"]
+        template_paths = ["imgs/free.bmp","imgs/free2.bmp"]
         found = find_and_click_eggs(driver, unity_canvas, template_paths)
         if found:
             print(f"成功领取food")
@@ -352,7 +356,7 @@ def grab_shop(driver):
     if found:
         print(f"找到currency")
         unity_canvas = driver.find_element("xpath", "//*[@id='unity-canvas']")  # 寻找食物，开始喂食
-        template_paths = ["imgs/free.bmp"]
+        template_paths = ["imgs/free.bmp","imgs/free2.bmp"]
         found = find_and_click_eggs(driver, unity_canvas, template_paths)
         if found:
             print(f"成功领取currency")
@@ -815,3 +819,5 @@ def import_wallet_3(driver, wallet_address):
     time.sleep(6)
 
     safe_click(driver, "//*[@id='root']/div[1]/div[2]/div/div[2]/button", "目标元素")
+
+
