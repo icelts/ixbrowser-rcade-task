@@ -199,6 +199,6 @@ def main(keys_file, profile_id, num_threads):
 if __name__ == "__main__":
     KEYS_FILE = 'private_keys.txt'
     BASE_PROFILE_ID = 49
-    NUM_THREADS = 10
+    NUM_THREADS = 1
 
     main(KEYS_FILE, BASE_PROFILE_ID, NUM_THREADS)

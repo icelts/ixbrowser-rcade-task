@@ -141,6 +141,7 @@ def feed_pets(driver):
         found = find_and_click_eggs(driver, unity_canvas, template_paths)
         if found:
             print(f"成功喂食，下一步关闭界面")
+            time.sleep(3)
             unity_canvas = driver.find_element("xpath", "//*[@id='unity-canvas']")  # 寻找食物，开始喂食
             template_paths = ["imgs/close2.bmp"]
             found = find_and_click_eggs(driver, unity_canvas, template_paths)
@@ -223,7 +224,7 @@ def feed_pets(driver):
     unity_canvas = driver.find_element("xpath", "//*[@id='unity-canvas']")  # 寻找食物，开始喂食
     template_paths = ["imgs/close2.bmp"]
     found = find_and_click_eggs(driver, unity_canvas, template_paths)
-
+    time.sleep(3)
 def setup_pet(driver):
     #先查找是否有新的蛋，有就激活，
     unity_canvas = driver.find_element("xpath", "//*[@id='unity-canvas']")
@@ -237,11 +238,15 @@ def setup_pet(driver):
         if found:
             print(f"新宠物激活成功")
     #查找是否有新的宠物，有就释放，窝里面有宠物和没宠物是不一样的，这里只要判断没有宠物的状态就可以了
+    time.sleep(5)
     unity_canvas = driver.find_element("xpath", "//*[@id='unity-canvas']")  # 如果商店
     template_paths = ["imgs/empty.bmp"]
     found = find_and_click_eggs(driver, unity_canvas, template_paths)
     if found:
         print(f"没有宠物，退出进行下一个任务")
+        unity_canvas = driver.find_element("xpath", "//*[@id='unity-canvas']")  # 如果商店
+        template_paths = ["imgs/close2.bmp"]
+        found = find_and_click_eggs(driver, unity_canvas, template_paths)
         return
     else:
         print(f"有宠物，开始释放宠物,需要遍历所有的页面是否有空位置，没有的话就跳出，总计最多有三个宠物位")
@@ -251,15 +256,18 @@ def setup_pet(driver):
             found = find_and_click_eggs(driver, unity_canvas, template_paths)
             if found:
                 print(f"进到下一页，开始找空位")
+                time.sleep(5)
                 unity_canvas = driver.find_element("xpath", "//*[@id='unity-canvas']")  # 如果商店
                 template_paths = ["imgs/vacant.bmp"]
                 found = find_and_click_eggs(driver, unity_canvas, template_paths)
                 if found:
                     print(f"找到空位置，开始释放宠物")
+                    time.sleep(5)
                     unity_canvas = driver.find_element("xpath", "//*[@id='unity-canvas']")  # 如果商店
                     template_paths = ["imgs/nursery.bmp"]
                     found = find_and_click_eggs(driver, unity_canvas, template_paths)
                     if found:
+                        time.sleep(5)
                         unity_canvas = driver.find_element("xpath", "//*[@id='unity-canvas']")  # 如果商店
                         template_paths = ["imgs/adopt.bmp"]
                         found = find_and_click_eggs(driver, unity_canvas, template_paths)
@@ -302,26 +310,31 @@ def grab_shop(driver):
     found = find_and_click_eggs(driver, unity_canvas, template_paths)
     if found:
         print(f"找到egg，已经领取egg")
+        time.sleep(6)
         unity_canvas = driver.find_element("xpath", "//*[@id='unity-canvas']")
         template_paths = ["imgs/ok.bmp"]
         found = find_and_click_eggs(driver, unity_canvas, template_paths)
         if found:
             print(f"成功点击ok按钮")
     #查找decorations界面
+    time.sleep(3)
     unity_canvas = driver.find_element("xpath", "//*[@id='unity-canvas']")  # 寻找食物，开始喂食
     template_paths = ["imgs/decorations.bmp"]
     found = find_and_click_eggs(driver, unity_canvas, template_paths)
     if found:
         print(f"找到decorations")
+        time.sleep(3)
         unity_canvas = driver.find_element("xpath", "//*[@id='unity-canvas']")  # 寻找领取免费物品按钮
         template_paths = ["imgs/free.bmp","imgs/free2.bmp"]
         found = find_and_click_eggs(driver, unity_canvas, template_paths)
         if found:
             print(f"成功领取decorations")
+            time.sleep(6)
             unity_canvas = driver.find_element("xpath", "//*[@id='unity-canvas']")
             template_paths = ["imgs/ok.bmp"]
             found = find_and_click_eggs(driver, unity_canvas, template_paths)
     #查找habitat界面
+    time.sleep(3)
     unity_canvas = driver.find_element("xpath", "//*[@id='unity-canvas']")
     template_paths = ["imgs/habitat.bmp"]
     found = find_and_click_eggs(driver, unity_canvas, template_paths)
@@ -332,10 +345,12 @@ def grab_shop(driver):
         found = find_and_click_eggs(driver, unity_canvas, template_paths)
         if found:
             print(f"成功领取habitat")
+            time.sleep(6)
             unity_canvas = driver.find_element("xpath", "//*[@id='unity-canvas']")
             template_paths = ["imgs/ok.bmp"]
             found = find_and_click_eggs(driver, unity_canvas, template_paths)
     #查找food界面
+    time.sleep(3)
     unity_canvas = driver.find_element("xpath", "//*[@id='unity-canvas']")  # 寻找食物，开始喂食
     template_paths = ["imgs/food.bmp"]
     found = find_and_click_eggs(driver, unity_canvas, template_paths)
@@ -346,10 +361,12 @@ def grab_shop(driver):
         found = find_and_click_eggs(driver, unity_canvas, template_paths)
         if found:
             print(f"成功领取food")
+            time.sleep(6)
             unity_canvas = driver.find_element("xpath", "//*[@id='unity-canvas']")  # 寻找食物，开始喂食
             template_paths = ["imgs/ok.bmp"]
             found = find_and_click_eggs(driver, unity_canvas, template_paths)
     #查找currency
+    time.sleep(3)
     unity_canvas = driver.find_element("xpath", "//*[@id='unity-canvas']")  # 寻找食物，开始喂食
     template_paths = ["imgs/currency.bmp"]
     found = find_and_click_eggs(driver, unity_canvas, template_paths)
@@ -360,6 +377,7 @@ def grab_shop(driver):
         found = find_and_click_eggs(driver, unity_canvas, template_paths)
         if found:
             print(f"成功领取currency")
+            time.sleep(6)
             unity_canvas = driver.find_element("xpath", "//*[@id='unity-canvas']")  # 寻找食物，开始喂食
             template_paths = ["imgs/ok.bmp"]
             found = find_and_click_eggs(driver, unity_canvas, template_paths)
