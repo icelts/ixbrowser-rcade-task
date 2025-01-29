@@ -221,6 +221,6 @@ def main(keys_file, num_threads):
 
 if __name__ == "__main__":
     KEYS_FILE = 'private_keys.txt'
-    NUM_THREADS = 2
+    NUM_THREADS = 10
 
     main(KEYS_FILE, NUM_THREADS)
