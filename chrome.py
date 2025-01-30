@@ -2,7 +2,8 @@ import sys
 import time
 import traceback
 from concurrent.futures import ThreadPoolExecutor
-
+import tempfile
+import shutil
 from selenium.webdriver import Chrome
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service
@@ -56,6 +57,8 @@ def run_game_automation(key_data, task_queue):
         #chrome_options.add_argument(f"--proxy-server={proxy}")
 
         # 其他 Chrome 选项
+        temp_dir = tempfile.mkdtemp()
+        chrome_options.add_argument(f"--user-data-dir={temp_dir}")  # 指定临时用户目录
         chrome_options.add_argument("--disable-popup-blocking")  # 禁用弹出窗口拦截
         chrome_options.add_argument("--disable-infobars")  # 禁用信息栏
         #chrome_options.add_argument("--disable-notifications")  # 禁用通知
@@ -202,6 +205,7 @@ def run_game_automation(key_data, task_queue):
         try:
             if driver:
                 driver.quit()
+                shutil.rmtree(temp_dir, ignore_errors=True)
         except Exception as cleanup_error:
             print(f"Cleanup error: {cleanup_error}")
 
