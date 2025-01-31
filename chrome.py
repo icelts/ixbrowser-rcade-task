@@ -10,7 +10,7 @@ from selenium.webdriver.chrome.service import Service
 
 from imgdetect import (
     grab_shop, feed_pets, click_skip, find_and_click_eggs,
-    setup_pet, rest_all_pets, import_wallet, capture_and_find_egg, import_wallet_3, safe_click
+    setup_pet, rest_all_pets, evolve_next, capture_and_find_egg, import_wallet_3, safe_click
 )
 
 
@@ -98,14 +98,8 @@ def run_game_automation(key_data, task_queue):
                     print(f"钱包没有导入成功，结束当前任务线程")
                     driver.quit()
                     return
-                unity_canvas = driver.find_element("xpath", "//*[@id='unity-canvas']")
-                template_paths = "imgs/evolve.bmp"
-                found, coordinates = capture_and_find_egg(driver, unity_canvas, template_paths, threshold=0.8)
-                if found:  # 满级，需要付费升级宠物
-                    print(f"已经满级，需要付费升级宠物,查看下一个页面的宠物状态")
-                    unity_canvas = driver.find_element("xpath", "//*[@id='unity-canvas']")
-                    template_paths = ["imgs/next.bmp"]
-                    found = find_and_click_eggs(driver, unity_canvas, template_paths)
+                #页面升级检测
+                evolve_next(driver)
                 # 游戏初始化，选择并激活宠物
                 unity_canvas = driver.find_element("xpath", "//*[@id='unity-canvas']")
                 template_paths = ["imgs/egg.bmp"]
@@ -124,6 +118,8 @@ def run_game_automation(key_data, task_queue):
                     print(f"未能成功点击目标:egg.bmp")
                 print(f"进入任务，开始循环找图")
                 # 所有的动作从play开始，如果找不到就让宠物休息，找到以后依次play,喂养，shop领取，egg激活，玩具放置，然后点击下一个页面进去喂养
+                #页面升级检测
+                evolve_next(driver)
                 for i in range(1, 10):
                     unity_canvas = driver.find_element("xpath", "//*[@id='unity-canvas']")  # 直接play6次
                     template_paths = ["imgs/play.bmp"]

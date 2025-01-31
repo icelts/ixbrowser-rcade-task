@@ -241,7 +241,7 @@ def setup_pet(driver):
     time.sleep(5)
     unity_canvas = driver.find_element("xpath", "//*[@id='unity-canvas']")  # 如果商店
     template_paths = ["imgs/empty.bmp"]
-    found = find_and_click_eggs(driver, unity_canvas, template_paths)
+    found, coordinates = capture_and_find_egg(driver, unity_canvas, template_paths, threshold=0.8)
     if found:
         print(f"没有宠物，退出进行下一个任务")
         unity_canvas = driver.find_element("xpath", "//*[@id='unity-canvas']")  # 如果商店
@@ -838,4 +838,24 @@ def import_wallet_3(driver, wallet_address):
 
     safe_click(driver, "//*[@id='root']/div[1]/div[2]/div/div[2]/button", "目标元素")
 
-
+def evolve_next(driver):
+    unity_canvas = driver.find_element("xpath", "//*[@id='unity-canvas']")
+    template_paths = "imgs/evolve.bmp"
+    found, coordinates = capture_and_find_egg(driver, unity_canvas, template_paths, threshold=0.8)
+    if found:  # 满级，需要付费升级宠物
+        print(f"已经满级，需要付费升级宠物,查看下一个页面的宠物状态")
+        unity_canvas = driver.find_element("xpath", "//*[@id='unity-canvas']")
+        template_paths = ["imgs/next.bmp"]
+        found = find_and_click_eggs(driver, unity_canvas, template_paths)
+        if found:
+            print("成功进入到下一个界面")
+    unity_canvas = driver.find_element("xpath", "//*[@id='unity-canvas']")
+    template_paths = "imgs/evolve2.bmp"
+    found, coordinates = capture_and_find_egg(driver, unity_canvas, template_paths, threshold=0.8)
+    if found:  # 满级，需要付费升级宠物
+        print(f"已经满级，需要付费升级宠物,查看下一个页面的宠物状态")
+        unity_canvas = driver.find_element("xpath", "//*[@id='unity-canvas']")
+        template_paths = ["imgs/next.bmp"]
+        found = find_and_click_eggs(driver, unity_canvas, template_paths)
+        if found:
+            print("成功进入到下一个界面")
