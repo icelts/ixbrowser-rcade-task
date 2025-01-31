@@ -907,3 +907,5 @@ def capture_and_recognize_number(driver, xpath, x1, y1, x2, y2):
             os.remove(region_filename)
 
     return 0
+
+#这个是最新版本

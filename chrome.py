@@ -234,7 +234,7 @@ def main(keys_file, num_threads):
 
 
 
-
+#线程调节
 if __name__ == "__main__":
     KEYS_FILE = 'private_keys.txt'
     NUM_THREADS = 10
