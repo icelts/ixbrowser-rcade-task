@@ -10,7 +10,7 @@ from selenium.webdriver.chrome.service import Service
 
 from imgdetect import (
     grab_shop, feed_pets, click_skip, find_and_click_eggs,
-    setup_pet, rest_all_pets, evolve_next, capture_and_find_egg, import_wallet_3, safe_click
+    setup_pet, rest_all_pets, evolve_next, capture_and_find_egg, import_wallet_3, safe_click,capture_and_recognize_number
 )
 
 
@@ -80,12 +80,23 @@ def run_game_automation(key_data, task_queue):
         # Game automation logic (similar to original script)
         window_handles = driver.window_handles
         driver.switch_to.window(window_handles[-1])
-        time.sleep(20)
+        time.sleep(30)
         safe_click(driver, "//*[@id='unity-fullscreen-button']", "打开全屏")
         #需要判断flash页面是否完全加载，才能连续点击，循环20次，每次等待6秒
         time.sleep(6)
         click_skip(driver, 20)
         print(f"进入游戏")
+        # 判断当前账号的点数
+        try:
+            number = int(capture_and_recognize_number(driver, '//*[@id="unity-canvas"]', 1021, 23, 1095, 46))
+            print(f"当前账号的点数是{number}")
+            if number > 500:
+                print(f"已经完成500个点数的任务，结束当前任务线程")
+                driver.quit()
+                shutil.rmtree(temp_dir, ignore_errors=True)
+                return
+        except ValueError:
+            print("无法将识别结果转换为数字")
         # [Rest of the original game automation logic]
         # ... (copy the entire game automation block from the previous script)
         # 下面开始多次循环找图做任务，直到完成500个点数的任务
@@ -117,6 +128,8 @@ def run_game_automation(key_data, task_queue):
                 else:
                     print(f"未能成功点击目标:egg.bmp")
                 print(f"进入任务，开始循环找图")
+
+
                 # 所有的动作从play开始，如果找不到就让宠物休息，找到以后依次play,喂养，shop领取，egg激活，玩具放置，然后点击下一个页面进去喂养
                 #页面升级检测
                 evolve_next(driver)
