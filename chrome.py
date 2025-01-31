@@ -134,6 +134,8 @@ def run_game_automation(key_data, task_queue):
                 #页面升级检测
                 evolve_next(driver)
                 for i in range(1, 10):
+                    safe_click(driver, "//*[@id='unity-fullscreen-button']", "打开全屏")
+                    time.sleep(2)
                     unity_canvas = driver.find_element("xpath", "//*[@id='unity-canvas']")  # 直接play6次
                     template_paths = ["imgs/play.bmp"]
                     found = find_and_click_eggs(driver, unity_canvas, template_paths)
