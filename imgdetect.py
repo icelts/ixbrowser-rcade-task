@@ -868,6 +868,8 @@ from PIL import Image
 import pytesseract
 import uuid
 
+import os
+
 
 def capture_and_recognize_number(driver, xpath, x1, y1, x2, y2):
     reader = easyocr.Reader(['en'])
@@ -890,12 +892,18 @@ def capture_and_recognize_number(driver, xpath, x1, y1, x2, y2):
     region_filename = f'number_region_{uuid.uuid4()}.png'
     region.save(region_filename)
 
-    result = reader.readtext(region_filename)
+    try:
+        result = reader.readtext(region_filename)
 
-    if result:
-        # 更精确的数字提取
-        matches = re.findall(r'\d+', str(result[0][1]).replace(',', ''))
-        if matches:
-            return int(matches[0])
+        if result:
+            matches = re.findall(r'\d+', str(result[0][1]).replace(',', ''))
+            if matches:
+                return int(matches[0])
+    finally:
+        # 删除临时图片文件
+        if os.path.exists(screenshot_filename):
+            os.remove(screenshot_filename)
+        if os.path.exists(region_filename):
+            os.remove(region_filename)
 
     return 0
