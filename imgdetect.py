@@ -240,7 +240,7 @@ def setup_pet(driver):
     #查找是否有新的宠物，有就释放，窝里面有宠物和没宠物是不一样的，这里只要判断没有宠物的状态就可以了
     time.sleep(5)
     unity_canvas = driver.find_element("xpath", "//*[@id='unity-canvas']")  # 如果商店
-    template_paths = ["imgs/empty.bmp"]
+    template_paths = "imgs/empty.bmp"
     found, coordinates = capture_and_find_egg(driver, unity_canvas, template_paths, threshold=0.8)
     if found:
         print(f"没有宠物，退出进行下一个任务")
